@@ -1,0 +1,8 @@
+body {
+	background-color: #505050;
+}
+
+#gameCanvas {
+	display: block;
+	margin: 0 auto;
+}
