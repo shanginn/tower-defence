@@ -3,11 +3,12 @@
 var Game = function() {
 	this.name = 'gamegamegame';
 	this.map = new Map();
+	this.emitter = new Emitter();
 	this.turrets = new Turrets(this.map);
 	this.enemies = new Enemies(this.map);
 	this.maxDt = 500;
 	
-	for (var i = 0; i < 5; i++) {
+	for (var i = 0; i < 1; i++) {
 		var newEnemy = new Enemy(3,0);
 		this.enemies.addToQueue(newEnemy);
 	}
@@ -38,7 +39,8 @@ Game.prototype.update = function(currentTime) {
 	}
 	
 	this.enemies.update(dt, this.map, currentTime);
-	this.turrets.update(dt, this.enemies.active);
+	this.turrets.update(dt, this.enemies.active, this.emitter);
+	this.emitter.update(dt);
 	this.timeStamp += dt;
 };
 

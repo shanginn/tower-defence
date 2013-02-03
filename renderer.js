@@ -31,6 +31,9 @@ Renderer.prototype.render = function() {
 	
 	// Enemies
 	this.renderEnemies();
+	
+	// Tracers
+	this.renderTracers();
 
 	var ctx = this;
 	requestAnimFrame(function() {
@@ -90,6 +93,22 @@ Renderer.prototype.renderEnemies = function() {
 			enemies[i].cellProgress) + 0.5) * this.game.map.gridPixelSize - 5;
 		this.context.fillStyle = '#FF5010';
 		this.context.fillRect(xPixelPos, yPixelPos, 11, 11);
+	}
+};
+
+Renderer.prototype.renderTracers = function() {
+	for (var i = 0; i < this.game.emitter.liveTracers; i++) {
+		var xPixelStart = (this.game.emitter.tracerPool[i].xStart + 0.5) * this.game.map.gridPixelSize;
+		var yPixelStart = (this.game.emitter.tracerPool[i].yStart + 0.5) * this.game.map.gridPixelSize;
+		var xPixelEnd = (this.game.emitter.tracerPool[i].xEnd + 0.5) * this.game.map.gridPixelSize;
+		var yPixelEnd = (this.game.emitter.tracerPool[i].yEnd + 0.5) * this.game.map.gridPixelSize;
+		this.context.strokeStyle = this.game.emitter.tracerPool[i].color;
+		this.context.lineWidth = 4;
+		this.context.beginPath();
+		this.context.moveTo(xPixelStart, yPixelStart);
+		this.context.lineTo(xPixelEnd, yPixelEnd);
+		this.context.stroke();
+		this.context.closePath();
 	}
 };
 

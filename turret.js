@@ -5,7 +5,7 @@ var Turret = function(xGrid, yGrid) {
 	this.yGrid = yGrid;
 	this.range = 2.5;  // measured in grid cells
 	this.target = null;
-	this.cooldown = 200.0;
+	this.cooldown = 250.0;
 	this.cooldownTimer = 0.0;
 	this.finished = 0;
 };
@@ -42,7 +42,7 @@ Turret.prototype.findTarget = function(enemies) {
 	}
 };
 
-Turret.prototype.fire = function(enemies, dt) {
+Turret.prototype.fire = function(enemies, emitter, dt) {
 	if (this.cooldownTimer > 0.0) {
 		this.cooldownTimer -= dt;
 	}
@@ -50,7 +50,12 @@ Turret.prototype.fire = function(enemies, dt) {
 		if (this.cooldownTimer <= 0.0) {
 			// this assumes instant effect
 			enemies[this.target].hp -= 1;
-			this.cooldownTimer = this.cooldown;
+			emitter.bulletfire(this.xGrid, this.yGrid,
+				(enemies[this.target].xGrid + (enemies[this.target].xGridNext -
+				enemies[this.target].xGrid) * enemies[this.target].cellProgress),
+				(enemies[this.target].yGrid + (enemies[this.target].yGridNext -
+				enemies[this.target].yGrid) * enemies[this.target].cellProgress));
+			this.cooldownTimer += this.cooldown;
 		}
 	}
 };

@@ -3,7 +3,7 @@
 var Enemies = function() {
 	this.active = [];
 	this.queue = [];
-	this.nextWaveTime = 10000.0;
+	this.nextWaveTime = 5000.0;
 	this.maxQueueSize = 5;
 	this.spawnInterval = 1000.0;
 	this.spawning = 0;

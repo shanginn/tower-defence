@@ -27,11 +27,11 @@ Turrets.prototype.spawn = function(xCell, yCell) {
 	this.active.push(newTurret);
 };
 
-Turrets.prototype.update = function(dt, enemies) {
+Turrets.prototype.update = function(dt, enemies, emitter) {
 	for (var i = 0; i < this.active.length; i++) {
 		if (this.active[i].finished === 0) {
 			this.active[i].findTarget(enemies);
-			this.active[i].fire(enemies, dt);
+			this.active[i].fire(enemies, emitter, dt);
 		}
 	}
 };
