@@ -9,13 +9,12 @@ var Turrets = function(map) {
 			this.layout[y].push(0);
 		}
 	}
-	
 };
 
-Turrets.prototype.spawn = function(xCell, yCell) {
-	var newTurret = new Turret(xCell, yCell);
-	this.layout[yCell][xCell] = 1;	
-	
+Turrets.prototype.spawn = function(xCell, yCell, type) {
+	var newTurret = new Turret(xCell, yCell, type);
+	this.layout[yCell][xCell] = 1;
+
 	// If there's an unused turret in the array then use that space
 	for (var i = 0; i < this.active.length; i++) {
 		if (this.active[i].finished === 1) {
