@@ -4,9 +4,9 @@ var TurretTypes = {
 
 	// basic gun
 	"gun": {
-		range: 2.5,
-		cooldown: 250.0,
-		damage: 2
+		range: 2.1,
+		cooldown: 200.0,
+		damage: 1
 	},
 
 	// long range artillery

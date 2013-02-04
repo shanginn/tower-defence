@@ -4,6 +4,7 @@ var Game = function() {
 	this.name = 'gamegamegame';
 	this.map = new Map();
 	this.emitter = new Emitter();
+	this.bullets = new Bullets();
 	this.turrets = new Turrets(this.map);
 	this.enemies = new Enemies(this.map);
 	this.maxDt = 500;
@@ -39,7 +40,8 @@ Game.prototype.update = function(currentTime) {
 	}
 	
 	this.enemies.update(dt, this.map, currentTime);
-	this.turrets.update(dt, this.enemies.active, this.emitter);
+	this.turrets.update(dt, this.enemies.active, this.bullets);
+	this.bullets.update(dt);
 	this.emitter.update(dt);
 	this.timeStamp += dt;
 };

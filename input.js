@@ -23,7 +23,7 @@ Input.prototype.onClick = function(event) {
 	// If the cell is empty terrain (== 0 in map.layout array) and 
 	// has no turret already then put a turret there
 	if (this.game.map.layout[yCell][xCell] === 0) {
-		this.game.turrets.spawn(xCell, yCell, "art");
+		this.game.turrets.spawn(xCell, yCell, "gun");
 	}
 };
 

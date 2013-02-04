@@ -1,6 +1,20 @@
 (function(exports) {
 
-var Bullet = function(x0, y0, x1, y1) {
+var Bullet = function() {
+	this.xSpawn = 0.0;
+	this.ySpawn = 0.0;
+	this.xTarget = 0.0;
+	this.yTarget = 0.0;
+	this.xGrid = 0.0;
+	this.yGrid = 0.0;
+	this.xDist = 0.0;
+	this.yDist = 0.0;
+	this.speed = 0.0;
+	this.damage = 0;
+	this.finished = 1;
+};
+
+Bullet.prototype.reset = function(x0, y0, x1, y1) {
 	this.xSpawn = x0;
 	this.ySpawn = y0;
 	this.xTarget = x1;
@@ -10,8 +24,8 @@ var Bullet = function(x0, y0, x1, y1) {
 	this.xDist = x1 - x0;
 	this.yDist = y1 - y0;
 	this.xVec = this.xDist / Math.sqrt(this.xDist*this.xDist + this.yDist*this.yDist);
-	this.xVec = this.yDist / Math.sqrt(this.xDist*this.xDist + this.yDist*this.yDist);
-	this.speed = 0.1;
+	this.yVec = this.yDist / Math.sqrt(this.xDist*this.xDist + this.yDist*this.yDist);
+	this.speed = 0.005;
 	this.damage = 1;
 	this.finished = 0;
 };
@@ -19,12 +33,12 @@ var Bullet = function(x0, y0, x1, y1) {
 Bullet.prototype.move = function(dt) {
 	this.xGrid += this.speed * this.xVec * dt;
 	this.yGrid += this.speed * this.yVec * dt;
-	if ((Math.abs(this.xGrid - this.xSpawn) > Math.abs(this.xDist)) &&
+	if ((Math.abs(this.xGrid - this.xSpawn) > Math.abs(this.xDist)) ||
 		(Math.abs(this.yGrid - this.ySpawn) > Math.abs(this.yDist))) {
 		this.finished = 1;
 	}
 };
 
-exports.Turret = Turret;
+exports.Bullet = Bullet;
 
 })(window);

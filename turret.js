@@ -14,8 +14,10 @@ var Turret = function(xGrid, yGrid, type) {
 Turret.prototype.findTarget = function(enemies) {
 	var distance = 0.0;
 	if (this.target !== null) {
-		var targetEnemyX = enemies[this.target].xGrid;
-		var targetEnemyY = enemies[this.target].yGrid;
+		var targetEnemyX = enemies[this.target].xGrid + (enemies[this.target].xGridNext -
+				enemies[this.target].xGrid) * enemies[this.target].cellProgress;
+		var targetEnemyY = enemies[this.target].yGrid + (enemies[this.target].yGridNext -
+				enemies[this.target].yGrid) * enemies[this.target].cellProgress;
 		distance = separation(this.xGrid, this.yGrid, targetEnemyX, targetEnemyY);
 		// Has our old target gone out of range or died?
 		if (enemies[this.target].hp <= 0) {
@@ -33,7 +35,11 @@ Turret.prototype.findTarget = function(enemies) {
 		var currentClosest = this.range;
 		for (var i = 0; i < enemies.length; i++) {
 			if (enemies[i].hp > 0) {
-				distance = separation(this.xGrid, this.yGrid, enemies[i].xGrid, enemies[i].yGrid);
+				var targetEnemyX = enemies[i].xGrid + (enemies[i].xGridNext -
+					enemies[i].xGrid) * enemies[i].cellProgress;
+				var targetEnemyY = enemies[i].yGrid + (enemies[i].yGridNext -
+					enemies[i].yGrid) * enemies[i].cellProgress;
+				distance = separation(this.xGrid, this.yGrid, targetEnemyX, targetEnemyY);
 				if (distance < currentClosest) {
 					this.target = i;
 					currentClosest = distance;
@@ -43,7 +49,7 @@ Turret.prototype.findTarget = function(enemies) {
 	}
 };
 
-Turret.prototype.fire = function(enemies, emitter, dt) {
+Turret.prototype.fire = function(enemies, bullets, dt) {
 	if (this.cooldownTimer > 0.0) {
 		this.cooldownTimer -= dt;
 	}
@@ -51,7 +57,7 @@ Turret.prototype.fire = function(enemies, emitter, dt) {
 		if (this.cooldownTimer <= 0.0) {
 			// this assumes instant effect
 			enemies[this.target].hp -= this.damage;
-			emitter.bulletfire(this.xGrid, this.yGrid,
+			bullets.spawn(this.xGrid, this.yGrid,
 				(enemies[this.target].xGrid + (enemies[this.target].xGridNext -
 				enemies[this.target].xGrid) * enemies[this.target].cellProgress),
 				(enemies[this.target].yGrid + (enemies[this.target].yGridNext -
