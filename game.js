@@ -10,7 +10,7 @@ var Game = function() {
 	this.maxDt = 500;
 	
 	for (var i = 0; i < 1; i++) {
-		var newEnemy = new Enemy(3,0);
+		var newEnemy = new Enemy(3, 0, this.map);
 		this.enemies.addToQueue(newEnemy);
 	}
 };

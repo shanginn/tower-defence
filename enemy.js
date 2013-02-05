@@ -1,21 +1,70 @@
 (function(exports) {
 
-var Enemy = function(xGridStart, yGridStart) {
-
-	// Start at entry point specified by the map
+var Enemy = function(xGridStart, yGridStart, map) {
+	// Currently moving between (xGrid, yGrid) and (xGridNext, yGridNext)
 	this.xGrid = xGridStart;
 	this.yGrid = yGridStart;
-	// Where we are headed next. First direction is always south
-	this.dir = 'south';
-	this.xGridNext = this.xGrid;
-	this.yGridNext = this.yGrid+1;
+	this.route = [];
+	this.routeLength = 0;
+	findRoute(this.route, this.routeLength, this.xGrid, this.yGrid, map);
+	this.routeProgress = 0;
+	this.xGridNext = this.xGrid + this.route[this.routeProgress][0];
+	this.yGridNext = this.yGrid + this.route[this.routeProgress][1];
 	// Fraction of the way from last current grid cell to next cell
 	this.cellProgress = 0.0;
 	// fraction of cellProgress made in 1ms
 	this.speed = 0.001;
 	this.hp = 50;
 	this.finished = 0;
-	
+};
+
+function findRoute(route, routeLength, x0, y0, map) {
+	// route is a list of directions [0,-1]=north, [1,0]=east, [0,1]=south, [-1,0]=west
+	// start by moving south
+	route.push([0,1]);
+	var x = x0;
+	var y = y0 + 1;
+	var xPrev = x0;
+	var yPrev = y0;
+	routeLength++;
+	// until we reach the goal, decide what our next direction should be
+	var noInfLoopCounter = 0;
+	while (map.layout[y][x] !== 2) {
+		// North
+		if (checkNorth(x, y, map.layout) && (y !== yPrev + 1)) {
+			route.push([0,-1]);
+			xPrev = x;
+			yPrev = y;
+			y--;
+			routeLength++;
+		// East
+		} else if (checkEast(x, y, map.layout) && (x !== xPrev - 1)) {
+			route.push([1,0]);
+			xPrev = x;
+			yPrev = y;
+			x++;
+			routeLength++;
+		// South
+		} else if (checkSouth(x, y, map.layout) && (y !== yPrev - 1)) {
+			route.push([0,1]);
+			xPrev = x;
+			yPrev = y;
+			y++;
+			routeLength++;
+		// West
+		} else if (checkWest(x, y, map.layout) && (x !== xPrev + 1)) {
+			route.push([-1,0]);
+			xPrev = x;
+			yPrev = y;
+			x--;
+			routeLength++;
+		}
+		noInfLoopCounter++;
+		if (noInfLoopCounter === 1000) {
+			console.log("failed to find route");
+			return false;
+		}
+	}
 };
 
 Enemy.prototype.update = function(dt, map) {
@@ -32,44 +81,18 @@ Enemy.prototype.update = function(dt, map) {
 	// If we reach the next cell, i.e. progress > 1.0, then work out where
 	// we need to go next and make the remaining progress in that direction.
 	if (this.cellProgress > 1.0) {
-		// No complex pathfinding here, just look around for another way that
-		// isnt the way we arrived. Assumes there is only one way to go.
-		
 		// Have we made it to the goal - if so the goal takes damage equal to
 		// our remaining hp
 		if (map.layout[this.yGridNext][this.xGridNext] === 2) {
 			map.goalHp -= this.hp;
 			this.hp = 0;
 			this.finished = 1;
-		}
-		
-		// North
-		if (checkNorth(this.xGridNext, this.yGridNext, map.layout) && (this.yGridNext - 1 !== this.yGrid)) {
+		} else {
+			this.routeProgress++;
 			this.xGrid = this.xGridNext;
-			this.xGridNext = this.xGridNext;
 			this.yGrid = this.yGridNext;
-			this.yGridNext = this.yGridNext - 1;
-			
-		// South
-		} else if (checkSouth(this.xGridNext, this.yGridNext, map.layout) && (this.yGridNext + 1 !== this.yGrid)) {
-			this.xGrid = this.xGridNext;
-			this.xGridNext = this.xGridNext;
-			this.yGrid = this.yGridNext;
-			this.yGridNext = this.yGridNext + 1;
-			
-		// East
-		} else if (checkEast(this.xGridNext, this.yGridNext, map.layout) && (this.xGridNext + 1 !== this.xGrid)) {
-			this.xGrid = this.xGridNext;
-			this.xGridNext = this.xGridNext + 1;
-			this.yGrid = this.yGridNext;
-			this.yGridNext = this.yGridNext;
-		
-		// West
-		} else if (checkWest(this.xGridNext, this.yGridNext, map.layout) && (this.xGridNext - 1 !== this.xGrid)) {
-			this.xGrid = this.xGridNext;
-			this.xGridNext = this.xGridNext - 1;
-			this.yGrid = this.yGridNext;
-			this.yGridNext = this.yGridNext;
+			this.xGridNext = this.xGridNext + this.route[this.routeProgress][0];
+			this.yGridNext = this.yGridNext + this.route[this.routeProgress][1];
 		}
 		this.cellProgress -= 1;
 	}
