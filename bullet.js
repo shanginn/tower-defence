@@ -25,7 +25,7 @@ Bullet.prototype.reset = function(x0, y0, x1, y1) {
 	this.yDist = y1 - y0;
 	this.xVec = this.xDist / Math.sqrt(this.xDist*this.xDist + this.yDist*this.yDist);
 	this.yVec = this.yDist / Math.sqrt(this.xDist*this.xDist + this.yDist*this.yDist);
-	this.speed = 0.005;
+	this.speed = 0.004;
 	this.damage = 1;
 	this.finished = 0;
 };

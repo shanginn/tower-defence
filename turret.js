@@ -57,11 +57,24 @@ Turret.prototype.fire = function(enemies, bullets, dt) {
 		if (this.cooldownTimer <= 0.0) {
 			// this assumes instant effect
 			enemies[this.target].hp -= this.damage;
-			bullets.spawn(this.xGrid, this.yGrid,
-				(enemies[this.target].xGrid + (enemies[this.target].xGridNext -
-				enemies[this.target].xGrid) * enemies[this.target].cellProgress),
-				(enemies[this.target].yGrid + (enemies[this.target].yGridNext -
-				enemies[this.target].yGrid) * enemies[this.target].cellProgress));
+			// An approximation to the bullet time to reach enemy
+			// Uses current enemy position to estimate travel time, but the enemy will continue moving
+			// just hope the bullets are fast enough that this is negligible
+			var bulletDistX = (enemies[this.target].xGrid + (enemies[this.target].xGridNext -
+				enemies[this.target].xGrid) * enemies[this.target].cellProgress) - this.xGrid + 0.5;
+			var bulletDistY = (enemies[this.target].yGrid + (enemies[this.target].yGridNext -
+				enemies[this.target].yGrid) * enemies[this.target].cellProgress) - this.yGrid + 0.5;
+			var bulletTravelTime = Math.sqrt(bulletDistX * bulletDistX + bulletDistY * bulletDistY) / 0.004;
+			console.log(bulletTravelTime);
+			var predictedEnemyPosition = enemies[this.target].predictPosition(bulletTravelTime);
+			for (var i = 0; i < 10; i++) {
+				bulletDistX = predictedEnemyPosition[0] - this.xGrid;
+				bulletDistY = predictedEnemyPosition[1] - this.yGrid;
+				bulletTravelTime = Math.sqrt(bulletDistX * bulletDistX + bulletDistY * bulletDistY) / 0.004;
+				console.log(i, bulletTravelTime);
+				predictedEnemyPosition = enemies[this.target].predictPosition(bulletTravelTime);
+			}
+			bullets.spawn(this.xGrid, this.yGrid, predictedEnemyPosition[0], predictedEnemyPosition[1]);
 			this.cooldownTimer += this.cooldown;
 		}
 	}

@@ -5,7 +5,6 @@ var Enemy = function(xGridStart, yGridStart, map) {
 	this.xGrid = xGridStart;
 	this.yGrid = yGridStart;
 	this.route = [];
-	this.routeLength = 0;
 	findRoute(this.route, this.routeLength, this.xGrid, this.yGrid, map);
 	this.routeProgress = 0;
 	this.xGridNext = this.xGrid + this.route[this.routeProgress][0];
@@ -14,8 +13,28 @@ var Enemy = function(xGridStart, yGridStart, map) {
 	this.cellProgress = 0.0;
 	// fraction of cellProgress made in 1ms
 	this.speed = 0.001;
-	this.hp = 50;
+	this.hp = 500;
 	this.finished = 0;
+};
+
+ Enemy.prototype.predictPosition = function(t) {
+//	Where will I be at time t in the future assuming current speed
+	var predictX = this.xGrid;
+	var predictY = this.yGrid;
+	var tCellProgress = this.cellProgress + t * this.speed;
+	var tRouteProgress = this.routeProgress;
+	while (tCellProgress > 1.0 && tRouteProgress < this.route.length) {
+		predictX += this.route[tRouteProgress][0];
+		predictY += this.route[tRouteProgress][1];
+		tRouteProgress++;
+		tCellProgress--;
+	}
+	if (tRouteProgress >= this.route.length) {
+		return [predictX, predictY];
+	}
+	predictX += this.route[tRouteProgress][0] * tCellProgress;
+	predictY += this.route[tRouteProgress][1] * tCellProgress;
+	return [predictX, predictY];
 };
 
 function findRoute(route, routeLength, x0, y0, map) {
@@ -65,7 +84,7 @@ function findRoute(route, routeLength, x0, y0, map) {
 			return false;
 		}
 	}
-};
+}
 
 Enemy.prototype.update = function(dt, map) {
 

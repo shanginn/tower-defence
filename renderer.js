@@ -125,7 +125,7 @@ Renderer.prototype.renderBullets = function() {
 		this.context.fillStyle = '#FF5010';
 		this.context.lineWidth = 4;
 		this.context.beginPath();
-		this.context.arc(xPixel, yPixel, 5, 0, 2*Math.PI);
+		this.context.arc(xPixel, yPixel, 2, 0, 2*Math.PI);
 		this.context.fill();
 		this.context.closePath();
 	}
