@@ -85,7 +85,6 @@ function findRoute(route, routeLength, x0, y0, map) {
 			return false;
 		}
 	}
-	console.log(route);
 }
 
 Enemy.prototype.update = function(dt, map) {

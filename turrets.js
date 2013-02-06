@@ -18,7 +18,7 @@ Turrets.prototype.spawn = function(xCell, yCell, type) {
 	// If there's an unused turret in the array then use that space
 	for (var i = 0; i < this.active.length; i++) {
 		if (this.active[i].finished === 1) {
-			this.active = newTurret;
+			this.active[i] = newTurret;
 			return;
 		}
 	}

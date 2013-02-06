@@ -7,6 +7,7 @@ var Game = function() {
 	this.bullets = new Bullets();
 	this.turrets = new Turrets(this.map);
 	this.enemies = new Enemies(this.map);
+	this.ui = new UI(this.turrets);
 	this.maxDt = 500;
 	
 	for (var i = 0; i < 1; i++) {
