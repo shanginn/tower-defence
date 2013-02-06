@@ -6,9 +6,9 @@ var Enemy = function(xGridStart, yGridStart, map) {
 	this.yGrid = yGridStart;
 	this.route = [];
 	findRoute(this.route, this.routeLength, this.xGrid, this.yGrid, map);
-	this.routeProgress = 0;
-	this.xGridNext = this.xGrid + this.route[this.routeProgress][0];
-	this.yGridNext = this.yGrid + this.route[this.routeProgress][1];
+	this.routeProgress = 1;
+	this.xGridNext = this.route[this.routeProgress][0];
+	this.yGridNext = this.route[this.routeProgress][1];
 	// Fraction of the way from last current grid cell to next cell
 	this.cellProgress = 0.0;
 	// fraction of cellProgress made in 1ms
@@ -17,32 +17,33 @@ var Enemy = function(xGridStart, yGridStart, map) {
 	this.finished = 0;
 };
 
- Enemy.prototype.predictPosition = function(t) {
-//	Where will I be at time t in the future assuming current speed
+Enemy.prototype.predictPosition = function(t) {
+	// Where will I be at time t in the future assuming current speed
 	var predictX = this.xGrid;
 	var predictY = this.yGrid;
 	var tCellProgress = this.cellProgress + t * this.speed;
 	var tRouteProgress = this.routeProgress;
 	while (tCellProgress > 1.0 && tRouteProgress < this.route.length) {
-		predictX += this.route[tRouteProgress][0];
-		predictY += this.route[tRouteProgress][1];
+		predictX = this.route[tRouteProgress][0];
+		predictY = this.route[tRouteProgress][1];
 		tRouteProgress++;
 		tCellProgress--;
 	}
 	if (tRouteProgress >= this.route.length) {
 		return [predictX, predictY];
 	}
-	predictX += this.route[tRouteProgress][0] * tCellProgress;
-	predictY += this.route[tRouteProgress][1] * tCellProgress;
+	predictX = this.route[tRouteProgress-1][0] + (this.route[tRouteProgress][0] - this.route[tRouteProgress-1][0]) * tCellProgress;
+	predictY = this.route[tRouteProgress-1][1] + (this.route[tRouteProgress][1] - this.route[tRouteProgress-1][1]) * tCellProgress;
 	return [predictX, predictY];
 };
 
 function findRoute(route, routeLength, x0, y0, map) {
-	// route is a list of directions [0,-1]=north, [1,0]=east, [0,1]=south, [-1,0]=west
-	// start by moving south
-	route.push([0,1]);
+	// route is a list of adjacent coordinates that the enemy 
+	// start by moving south from (x0, y0)
+	route.push([x0, y0]);
 	var x = x0;
 	var y = y0 + 1;
+	route.push([x, y]);
 	var xPrev = x0;
 	var yPrev = y0;
 	routeLength++;
@@ -51,31 +52,31 @@ function findRoute(route, routeLength, x0, y0, map) {
 	while (map.layout[y][x] !== 2) {
 		// North
 		if (checkNorth(x, y, map.layout) && (y !== yPrev + 1)) {
-			route.push([0,-1]);
 			xPrev = x;
 			yPrev = y;
 			y--;
+			route.push([x, y]);
 			routeLength++;
 		// East
 		} else if (checkEast(x, y, map.layout) && (x !== xPrev - 1)) {
-			route.push([1,0]);
 			xPrev = x;
 			yPrev = y;
 			x++;
+			route.push([x, y]);
 			routeLength++;
 		// South
 		} else if (checkSouth(x, y, map.layout) && (y !== yPrev - 1)) {
-			route.push([0,1]);
 			xPrev = x;
 			yPrev = y;
 			y++;
+			route.push([x, y]);
 			routeLength++;
 		// West
 		} else if (checkWest(x, y, map.layout) && (x !== xPrev + 1)) {
-			route.push([-1,0]);
 			xPrev = x;
 			yPrev = y;
 			x--;
+			route.push([x, y]);
 			routeLength++;
 		}
 		noInfLoopCounter++;
@@ -84,6 +85,7 @@ function findRoute(route, routeLength, x0, y0, map) {
 			return false;
 		}
 	}
+	console.log(route);
 }
 
 Enemy.prototype.update = function(dt, map) {
@@ -110,8 +112,8 @@ Enemy.prototype.update = function(dt, map) {
 			this.routeProgress++;
 			this.xGrid = this.xGridNext;
 			this.yGrid = this.yGridNext;
-			this.xGridNext = this.xGridNext + this.route[this.routeProgress][0];
-			this.yGridNext = this.yGridNext + this.route[this.routeProgress][1];
+			this.xGridNext = this.route[this.routeProgress][0];
+			this.yGridNext = this.route[this.routeProgress][1];
 		}
 		this.cellProgress -= 1;
 	}

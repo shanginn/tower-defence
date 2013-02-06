@@ -65,13 +65,11 @@ Turret.prototype.fire = function(enemies, bullets, dt) {
 			var bulletDistY = (enemies[this.target].yGrid + (enemies[this.target].yGridNext -
 				enemies[this.target].yGrid) * enemies[this.target].cellProgress) - this.yGrid + 0.5;
 			var bulletTravelTime = Math.sqrt(bulletDistX * bulletDistX + bulletDistY * bulletDistY) / 0.004;
-			console.log(bulletTravelTime);
 			var predictedEnemyPosition = enemies[this.target].predictPosition(bulletTravelTime);
 			for (var i = 0; i < 10; i++) {
 				bulletDistX = predictedEnemyPosition[0] - this.xGrid;
 				bulletDistY = predictedEnemyPosition[1] - this.yGrid;
 				bulletTravelTime = Math.sqrt(bulletDistX * bulletDistX + bulletDistY * bulletDistY) / 0.004;
-				console.log(i, bulletTravelTime);
 				predictedEnemyPosition = enemies[this.target].predictPosition(bulletTravelTime);
 			}
 			bullets.spawn(this.xGrid, this.yGrid, predictedEnemyPosition[0], predictedEnemyPosition[1]);
