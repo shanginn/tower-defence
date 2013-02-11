@@ -22,7 +22,7 @@ Input.prototype.onClick = function(event) {
 	
 	// If the cell is empty terrain (== 0 in map.layout array) and 
 	// has no turret already then put a turret there
-	if (this.game.map.layout[yCell][xCell] === 0) {
+	if (this.game.map.layout[yCell][xCell] === 0 && this.game.turrets.layout[yCell][xCell] == 0) {
 		this.game.ui.towerSelection(xCell, yCell);
 	}
 };
