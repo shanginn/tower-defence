@@ -1,6 +1,4 @@
-(function(exports) {
-
-var Bullet = function() {
+td.Bullet = function() {
 	this.xSpawn = 0.0;
 	this.ySpawn = 0.0;
 	this.xTarget = 0.0;
@@ -14,7 +12,7 @@ var Bullet = function() {
 	this.finished = 1;
 };
 
-Bullet.prototype.reset = function(x0, y0, x1, y1) {
+td.Bullet.prototype.reset = function(x0, y0, x1, y1) {
 	this.xSpawn = x0;
 	this.ySpawn = y0;
 	this.xTarget = x1;
@@ -30,7 +28,7 @@ Bullet.prototype.reset = function(x0, y0, x1, y1) {
 	this.finished = 0;
 };
 
-Bullet.prototype.move = function(dt) {
+td.Bullet.prototype.move = function(dt) {
 	this.xGrid += this.speed * this.xVec * dt;
 	this.yGrid += this.speed * this.yVec * dt;
 	if ((Math.abs(this.xGrid - this.xSpawn) > Math.abs(this.xDist)) ||
@@ -38,7 +36,3 @@ Bullet.prototype.move = function(dt) {
 		this.finished = 1;
 	}
 };
-
-exports.Bullet = Bullet;
-
-})(window);

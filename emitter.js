@@ -1,6 +1,4 @@
-(function(exports) {
-
-var Emitter = function() {
+td.Emitter = function() {
 	this.totalParticles = 1000;
 	this.liveParticles = 0;
 	this.particlePool = [];
@@ -11,15 +9,15 @@ var Emitter = function() {
 	this.tracerPool = [];
 	
 	for (var i = 0; i < this.totalParticles; i++) {
-		this.particlePool.push(new Particle());
+		this.particlePool.push(new td.Particle());
 	}
 	
 	for (var i = 0; i < this.totalTracers; i++) {
-		this.tracerPool.push(new Tracer());
+		this.tracerPool.push(new td.Tracer());
 	}
 };
 
-Emitter.prototype.update = function(dt) {
+td.Emitter.prototype.update = function(dt) {
 	for (var i = 0; i < this.liveParticles; i++) {
 		this.particlePool[i].lifetime -= dt;
 		if (this.particlePool[i].lifetime > 0) {
@@ -47,7 +45,7 @@ Emitter.prototype.update = function(dt) {
 	}
 };
 
-Emitter.prototype.addTracer = function(x0, y0, x1, y1, lt, inten, co, al) {
+td.Emitter.prototype.addTracer = function(x0, y0, x1, y1, lt, inten, co, al) {
 	if (this.liveTracers < this.totalTracers) {
 		this.tracerPool[this.liveTracers].xStart = x0;
 		this.tracerPool[this.liveTracers].yStart = y0;
@@ -62,10 +60,6 @@ Emitter.prototype.addTracer = function(x0, y0, x1, y1, lt, inten, co, al) {
 	}
 };
 
-Emitter.prototype.bulletfire = function(x0, y0, x1, y1) {
+td.Emitter.prototype.bulletfire = function(x0, y0, x1, y1) {
 	this.addTracer(x0, y0, x1, y1, 150.0, 1.0, '#EE7942', 1.0);
 };
-
-exports.Emitter = Emitter;
-
-})(window);

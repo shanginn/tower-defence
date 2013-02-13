@@ -1,5 +1,3 @@
-(function(exports) {
-
 // shim layer with setTimeout fallback
 window.requestAnimFrame = (function(){
 	return window.requestAnimationFrame ||
@@ -12,7 +10,7 @@ window.requestAnimFrame = (function(){
 	};
 })();
 
-var Renderer = function(game) {
+td.Renderer = function(game) {
 	this.game = game;
 	this.canvas = document.getElementById('gameCanvas');
 	this.canvas.width = 800;	// Lets go with a fixed canvas size
@@ -20,7 +18,7 @@ var Renderer = function(game) {
 	this.context = this.canvas.getContext('2d');
 };
 
-Renderer.prototype.render = function() {
+td.Renderer.prototype.render = function() {
 	this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	
 	// Map - could be done on a separate layer removing the need to redraw
@@ -44,7 +42,7 @@ Renderer.prototype.render = function() {
 	});
 };
 
-Renderer.prototype.renderMap = function() {
+td.Renderer.prototype.renderMap = function() {
 	var mapLayout = this.game.map.layout;
 	for (var y = 0; y < mapLayout.length; y++) {
 		for (var x = 0; x < mapLayout[y].length; x++) {
@@ -70,7 +68,7 @@ Renderer.prototype.renderMap = function() {
 	}
 };
 
-Renderer.prototype.renderTurrets = function() {
+td.Renderer.prototype.renderTurrets = function() {
 	var turretLayout = this.game.turrets.layout;
 	for (var y = 0; y < turretLayout.length; y++) {
 		for (var x = 0; x < turretLayout[y].length; x++) {
@@ -84,7 +82,7 @@ Renderer.prototype.renderTurrets = function() {
 	}
 };
 
-Renderer.prototype.renderEnemies = function() {
+td.Renderer.prototype.renderEnemies = function() {
 	var enemies = this.game.enemies.active;
 	for (var i = 0; i < enemies.length; i++) {
 		if (enemies[i].finished === 1) {
@@ -99,7 +97,7 @@ Renderer.prototype.renderEnemies = function() {
 	}
 };
 
-Renderer.prototype.renderTracers = function() {
+td.Renderer.prototype.renderTracers = function() {
 	for (var i = 0; i < this.game.emitter.liveTracers; i++) {
 		var xPixelStart = (this.game.emitter.tracerPool[i].xStart + 0.5) * this.game.map.gridPixelSize;
 		var yPixelStart = (this.game.emitter.tracerPool[i].yStart + 0.5) * this.game.map.gridPixelSize;
@@ -115,7 +113,7 @@ Renderer.prototype.renderTracers = function() {
 	}
 };
 
-Renderer.prototype.renderBullets = function() {
+td.Renderer.prototype.renderBullets = function() {
 	var bulletList = this.game.bullets.active;
 	var liveNum = this.game.bullets.liveBullets;
 	for (var i = 0; i < liveNum; i++) {
@@ -130,7 +128,3 @@ Renderer.prototype.renderBullets = function() {
 		this.context.closePath();
 	}
 };
-
-exports.Renderer = Renderer;
-
-})(window);

@@ -1,10 +1,9 @@
 window.onload = function() {
-	var game = new Game();
-	var renderer = new Renderer(game);
-	var input = new Input(game);
+	window.game = new td.Game();
+	window.renderer = new td.Renderer(game);
 	
 	var startTime = new Date().valueOf();
 	console.log("play");
-	game.play(startTime, Math.round(1000/60));
-	renderer.render();
+	window.game.play(startTime, Math.round(1000/60));
+	window.renderer.render();
 };

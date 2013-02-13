@@ -1,17 +1,15 @@
-(function(exports) {
-
-var Turret = function(xGrid, yGrid, type) {
+td.Turret = function(xGrid, yGrid, type) {
 	this.xGrid = xGrid;
 	this.yGrid = yGrid;
-	this.range = TurretTypes[type].range;  // measured in grid cells
+	this.range = window.game.towerTypes[type].range;  // measured in grid cells
 	this.target = null;
-	this.cooldown = TurretTypes[type].cooldown;
+	this.cooldown = window.game.towerTypes[type].cooldown;
 	this.cooldownTimer = 0.0;
-	this.damage = TurretTypes[type].damage;
+	this.damage = window.game.towerTypes[type].damage;
 	this.finished = 0;
 };
 
-Turret.prototype.findTarget = function(enemies) {
+td.Turret.prototype.findTarget = function(enemies) {
 	var distance = 0.0;
 	if (this.target !== null) {
 		var targetEnemyX = enemies[this.target].xGrid + (enemies[this.target].xGridNext -
@@ -47,9 +45,13 @@ Turret.prototype.findTarget = function(enemies) {
 			}
 		}
 	}
+	
+	function separation(x1, y1, x2, y2) {
+		return Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+	}
 };
 
-Turret.prototype.fire = function(enemies, bullets, dt) {
+td.Turret.prototype.fire = function(enemies, bullets, dt) {
 	if (this.cooldownTimer > 0.0) {
 		this.cooldownTimer -= dt;
 	}
@@ -77,11 +79,3 @@ Turret.prototype.fire = function(enemies, bullets, dt) {
 		}
 	}
 };
-
-function separation(x1, y1, x2, y2) {
-	return Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
-}
-
-exports.Turret = Turret;
-
-})(window);

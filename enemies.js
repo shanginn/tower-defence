@@ -1,6 +1,4 @@
-(function(exports) {
-
-var Enemies = function() {
+td.Enemies = function() {
 	this.active = [];
 	this.queue = [];
 	this.nextWaveTime = 5000.0;
@@ -10,13 +8,13 @@ var Enemies = function() {
 	this.nextSpawn = 0.0;
 };
 
-Enemies.prototype.addToQueue = function (enemy) {
+td.Enemies.prototype.addToQueue = function (enemy) {
 	if (this.queue.length < this.maxQueueSize) {
 		this.queue.push(enemy);
 	}
 };
 
-Enemies.prototype.spawn = function(enemy) {
+td.Enemies.prototype.spawn = function(enemy) {
 	// If there's an unused enemy in the array then use that space
 	for (var i = 0; i < this.active.length; i++) {
 		if (this.active[i].finished === 1) {
@@ -28,7 +26,7 @@ Enemies.prototype.spawn = function(enemy) {
 	this.active.push(enemy);
 };
 
-Enemies.prototype.update = function(dt, map, ct) {
+td.Enemies.prototype.update = function(dt, map, ct, player) {
 	// Any to spawn from the queue?
 	if (this.nextWaveTime <= ct && this.spawning === 0) {
 		if (this.queue.length > 0) {
@@ -51,14 +49,10 @@ Enemies.prototype.update = function(dt, map, ct) {
 
 	for (var i = 0; i < this.active.length; i++) {
 		if (this.active[i].finished === 0) {
-			this.active[i].update(dt, map);
+			this.active[i].update(dt, map, player);
 			if (this.active[i].hp <= 0) {
 				this.finished = 1;
 			}
 		}
 	}
 };
-
-exports.Enemies = Enemies;
-
-})(window);

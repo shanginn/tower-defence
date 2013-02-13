@@ -1,6 +1,4 @@
-(function(exports) {
-
-var Particle = function(x, y, xV, yV, lifetime, size, color, alpha) {
+td.Particle = function(x, y, xV, yV, lifetime, size, color, alpha) {
 	this.xCell = x;
 	this.yCell = y;
 	this.xVec = xV;
@@ -9,8 +7,4 @@ var Particle = function(x, y, xV, yV, lifetime, size, color, alpha) {
 	this.size = size;
 	this.color = color;
 	this.alpha = alpha;
-}
-
-exports.Particle = Particle;
-
-})(window);
+};

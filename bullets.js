@@ -1,16 +1,14 @@
-(function(exports) {
-
-var Bullets = function() {
+td.Bullets = function() {
 	this.active = [];
 	this.liveBullets = 0;
 	this.maxBullets = 1000;
 	
 	for (var i = 0; i < this.maxBullets; i++) {
-		this.active.push(new Bullet());
+		this.active.push(new td.Bullet());
 	}
 };
 
-Bullets.prototype.update = function(dt) {
+td.Bullets.prototype.update = function(dt) {
 	for (var i = 0; i < this.liveBullets; i++) {
 		this.active[i].move(dt);
 		if (this.active[i].finished === 1) {
@@ -23,13 +21,9 @@ Bullets.prototype.update = function(dt) {
 	}
 };
 
-Bullets.prototype.spawn = function(x0, y0, x1, y1) {
+td.Bullets.prototype.spawn = function(x0, y0, x1, y1) {
 	if (this.liveBullets < this.maxBullets) {
 		this.active[this.liveBullets].reset(x0, y0, x1, y1);
 		this.liveBullets++;
 	}
 };
-
-exports.Bullets = Bullets;
-
-})(window);

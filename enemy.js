@@ -1,11 +1,9 @@
-(function(exports) {
-
-var Enemy = function(xGridStart, yGridStart, map) {
+td.Enemy = function(xGridStart, yGridStart, map) {
 	// Currently moving between (xGrid, yGrid) and (xGridNext, yGridNext)
 	this.xGrid = xGridStart;
 	this.yGrid = yGridStart;
 	this.route = [];
-	findRoute(this.route, this.routeLength, this.xGrid, this.yGrid, map);
+	this.findRoute(this.route, this.routeLength, this.xGrid, this.yGrid, map);
 	this.routeProgress = 1;
 	this.xGridNext = this.route[this.routeProgress][0];
 	this.yGridNext = this.route[this.routeProgress][1];
@@ -13,11 +11,11 @@ var Enemy = function(xGridStart, yGridStart, map) {
 	this.cellProgress = 0.0;
 	// fraction of cellProgress made in 1ms
 	this.speed = 0.001;
-	this.hp = 500;
+	this.hp = 50;
 	this.finished = 0;
 };
 
-Enemy.prototype.predictPosition = function(t) {
+td.Enemy.prototype.predictPosition = function(t) {
 	// Where will I be at time t in the future assuming current speed
 	var predictX = this.xGrid;
 	var predictY = this.yGrid;
@@ -37,7 +35,7 @@ Enemy.prototype.predictPosition = function(t) {
 	return [predictX, predictY];
 };
 
-function findRoute(route, routeLength, x0, y0, map) {
+td.Enemy.prototype.findRoute = function(route, routeLength, x0, y0, map) {
 	// route is a list of adjacent coordinates that the enemy 
 	// start by moving south from (x0, y0)
 	route.push([x0, y0]);
@@ -85,12 +83,49 @@ function findRoute(route, routeLength, x0, y0, map) {
 			return false;
 		}
 	}
-}
+	
+	function checkNorth(x, y, mapLayout) {
+		if (y === 0) {
+			return false;
+		} else if (mapLayout[y-1][x] === 1 || mapLayout[y-1][x] === 2) {
+			return true;
+		}
+		return false;
+	}
 
-Enemy.prototype.update = function(dt, map) {
+	function checkEast(x, y, mapLayout) {
+		if (x === mapLayout[0].length) {
+			return false;
+		} else if (mapLayout[y][x+1] === 1 || mapLayout[y][x+1] === 2) {
+			return true;
+		}
+		return false;
+	}
+
+	function checkSouth(x, y, mapLayout) {
+		if (y === mapLayout.length - 1) {
+			return false;
+		} else if (mapLayout[y+1][x] === 1 || mapLayout[y+1][x] === 2) {
+			return true;
+		}
+		return false;
+	}
+
+	function checkWest(x, y, mapLayout) {
+		if (x === 0) {
+			return false;
+		} else if (mapLayout[y][x-1] === 1 || mapLayout[y][x-1] === 2) {
+			return true;
+		}
+		return false;
+	}
+};
+
+td.Enemy.prototype.update = function(dt, map, player) {
 
 	if (this.hp <= 0) {
 		this.finished = 1;
+		player.giveMoney(100);
 	}
 	
 	if (this.finished === 1) {
@@ -117,43 +152,3 @@ Enemy.prototype.update = function(dt, map) {
 		this.cellProgress -= 1;
 	}
 };
-
-function checkNorth(x, y, mapLayout) {
-	if (y === 0) {
-		return false;
-	} else if (mapLayout[y-1][x] === 1 || mapLayout[y-1][x] === 2) {
-		return true;
-	}
-	return false;
-}
-
-function checkEast(x, y, mapLayout) {
-	if (x === mapLayout[0].length) {
-		return false;
-	} else if (mapLayout[y][x+1] === 1 || mapLayout[y][x+1] === 2) {
-		return true;
-	}
-	return false;
-}
-
-function checkSouth(x, y, mapLayout) {
-	if (y === mapLayout.length - 1) {
-		return false;
-	} else if (mapLayout[y+1][x] === 1 || mapLayout[y+1][x] === 2) {
-		return true;
-	}
-	return false;
-}
-
-function checkWest(x, y, mapLayout) {
-	if (x === 0) {
-		return false;
-	} else if (mapLayout[y][x-1] === 1 || mapLayout[y][x-1] === 2) {
-		return true;
-	}
-	return false;
-}
-
-exports.Enemy = Enemy;
-
-})(window);

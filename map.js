@@ -1,6 +1,4 @@
-(function(exports) {
-
-var Map = function() {
+td.Map = function() {
 	this.name = "Map Zero";
 	this.gridPixelSize = 50;
 	this.layout = [
@@ -19,7 +17,3 @@ var Map = function() {
 	];
 	this.goalHp = 1000;
 };
-
-exports.Map = Map;
-
-})(window);

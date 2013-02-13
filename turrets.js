@@ -1,6 +1,4 @@
-(function(exports) {
-
-var Turrets = function(map) {
+td.Turrets = function(map) {
 	this.active = [];
 	this.layout = [];
 	for (var y = 0; y < map.layout.length; y++) {
@@ -11,8 +9,8 @@ var Turrets = function(map) {
 	}
 };
 
-Turrets.prototype.spawn = function(xCell, yCell, type) {
-	var newTurret = new Turret(xCell, yCell, type);
+td.Turrets.prototype.spawn = function(xCell, yCell, type) {
+	var newTurret = new td.Turret(xCell, yCell, type);
 	this.layout[yCell][xCell] = 1;
 
 	// If there's an unused turret in the array then use that space
@@ -26,7 +24,7 @@ Turrets.prototype.spawn = function(xCell, yCell, type) {
 	this.active.push(newTurret);
 };
 
-Turrets.prototype.update = function(dt, enemies, emitter) {
+td.Turrets.prototype.update = function(dt, enemies, emitter) {
 	for (var i = 0; i < this.active.length; i++) {
 		if (this.active[i].finished === 0) {
 			this.active[i].findTarget(enemies);
@@ -34,7 +32,3 @@ Turrets.prototype.update = function(dt, enemies, emitter) {
 		}
 	}
 };
-
-exports.Turrets = Turrets;
-
-})(window);

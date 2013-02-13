@@ -1,6 +1,4 @@
-(function(exports) {
-
-var Tracer = function() {
+td.Tracer = function() {
 	this.xStart = 0.0;
 	this.yStart = 0.0;
 	this.xEnd = 1.0;
@@ -11,7 +9,3 @@ var Tracer = function() {
 	this.color = '#F87531';
 	this.alpha = 1.0;
 };
-
-exports.Tracer = Tracer;
-
-})(window);
