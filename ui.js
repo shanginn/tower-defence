@@ -45,12 +45,16 @@ td.UI.prototype.updateMoney = function() {
 	this.money.innerHTML = "Money: " + this.player.money.toString();
 	if (this.player.money >= this.towerTypes["gun"].cost) {
 		document.getElementById("gun").onclick = this.buildTower.bind(this, "gun");
+		document.getElementById("gun").className = "";
 	} else {
 		document.getElementById("gun").onclick = null;
+		document.getElementById("gun").className = "inactive";
 	}
 	if (this.player.money >= this.towerTypes["art"].cost) {
 		document.getElementById("art").onclick = this.buildTower.bind(this, "art");
+		document.getElementById("art").className = "";
 	} else {
 		document.getElementById("art").onclick = null;
+		document.getElementById("art").className = "inactive";
 	}
 };

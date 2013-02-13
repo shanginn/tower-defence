@@ -73,6 +73,11 @@ body {
 	user-select: none;
 }
 
+#gameTowerSelection a.inactive {
+	background: rgba(200, 200, 200, 1.0);
+	color: rgba(150, 150, 150, 1.0);
+}
+
 #gameTowerSelection a:hover {
 	background: rgba(190, 190, 190, 1.0);
 }
