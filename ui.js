@@ -7,6 +7,12 @@ td.UI = function(turrets, towerTypes, player) {
 	this.player = player;
 	this.hideAll();
 	this.gameCover.onclick = this.hideAll.bind(this);
+	for (i in this.towerTypes) {
+		var a = document.createElement("a");
+		a.innerHTML = this.towerTypes[i].name;
+		a.id = i;
+		this.buildList.appendChild(a);
+	}
 };
 
 td.UI.prototype.hideAll = function() {
@@ -43,18 +49,14 @@ td.UI.prototype.towerSelection = function(x, y) {
 
 td.UI.prototype.updateMoney = function() {
 	this.money.innerHTML = "Money: " + this.player.money.toString();
-	if (this.player.money >= this.towerTypes["gun"].cost) {
-		document.getElementById("gun").onclick = this.buildTower.bind(this, "gun");
-		document.getElementById("gun").className = "";
-	} else {
-		document.getElementById("gun").onclick = null;
-		document.getElementById("gun").className = "inactive";
-	}
-	if (this.player.money >= this.towerTypes["art"].cost) {
-		document.getElementById("art").onclick = this.buildTower.bind(this, "art");
-		document.getElementById("art").className = "";
-	} else {
-		document.getElementById("art").onclick = null;
-		document.getElementById("art").className = "inactive";
+	for (i in this.towerTypes) {
+		var a = document.getElementById(i);
+		if (this.player.money >= this.towerTypes[i].cost) {
+			a.onclick = this.buildTower.bind(this, i);
+			a.className = "";
+		} else {
+			a.onclick = null;
+			a.className = "inactive";
+		}
 	}
 };
