@@ -12,6 +12,7 @@ td.Enemy = function(xGridStart, yGridStart, map) {
 	// fraction of cellProgress made in 1ms
 	this.speed = 0.001;
 	this.hp = 50;
+	this.spawnTime = 0;
 	this.finished = 0;
 };
 
@@ -36,6 +37,7 @@ td.Enemy.prototype.predictPosition = function(t) {
 };
 
 td.Enemy.prototype.findRoute = function(route, routeLength, x0, y0, map) {
+
 	// route is a list of adjacent coordinates that the enemy 
 	// start by moving south from (x0, y0)
 	route.push([x0, y0]);

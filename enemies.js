@@ -1,16 +1,32 @@
 td.Enemies = function() {
 	this.active = [];
-	this.queue = [];
+	this.enemyQueue = [];
+	this.waves = [];
 	this.nextWaveTime = 5000.0;
-	this.maxQueueSize = 5;
+	this.maxQueueSize = 10;
 	this.spawnInterval = 1000.0;
 	this.spawning = 0;
 	this.nextSpawn = 0.0;
 };
 
+td.Enemies.prototype.setupWaves = function(waves, map) {
+	this.waves = waves;
+	// Queue up the first wave
+	this.spawnWave(this.waves[0], map);
+	this.waves.splice(0, 1);
+};
+
+td.Enemies.prototype.spawnWave = function(wave, map) {
+	for (var i = 0; i < wave.enemies.length; i++) {
+		var newEnemy = new td.Enemy(3, 0, map);
+		newEnemy.spawnTime = wave.time + i * this.spawnInterval;
+		this.addToQueue(newEnemy);
+	}
+};
+
 td.Enemies.prototype.addToQueue = function (enemy) {
-	if (this.queue.length < this.maxQueueSize) {
-		this.queue.push(enemy);
+	if (this.enemyQueue.length < this.maxQueueSize) {
+		this.enemyQueue.push(enemy);
 	}
 };
 
@@ -18,7 +34,7 @@ td.Enemies.prototype.spawn = function(enemy) {
 	// If there's an unused enemy in the array then use that space
 	for (var i = 0; i < this.active.length; i++) {
 		if (this.active[i].finished === 1) {
-			this.active = enemy;
+			this.active[i] = enemy;
 			return;
 		}
 	}
@@ -27,24 +43,14 @@ td.Enemies.prototype.spawn = function(enemy) {
 };
 
 td.Enemies.prototype.update = function(dt, map, ct, player) {
-	// Any to spawn from the queue?
-	if (this.nextWaveTime <= ct && this.spawning === 0) {
-		if (this.queue.length > 0) {
-			this.spawning = 1;
-			this.nextSpawn = 0.0;
-		}
-	}
-	if (this.spawning === 1) {
-		this.nextSpawn -= dt;
-		if (this.nextSpawn <= 0.0) {
-			this.spawn(this.queue[0]);
-			this.nextSpawn += this.spawnInterval;
-			this.queue.splice(0,1);
-			if (this.queue.length === 0) {
-				this.spawning = 0;
-				this.nextWaveTime += 10000.0;
-			}
-		}
+	// Is it time to spawn the next guy?
+	if (this.enemyQueue.length > 0 && this.enemyQueue[0].spawnTime <= ct) {
+		this.spawn(this.enemyQueue[0]);
+		this.enemyQueue.splice(0,1);
+	} else if (this.enemyQueue.length == 0 && this.waves.length > 0) {
+	// If this wave is over then lets queue up the next wave
+		this.spawnWave(this.waves[0], map);
+		this.waves.splice(0, 1);
 	}
 
 	for (var i = 0; i < this.active.length; i++) {

@@ -13,11 +13,7 @@ td.Game = function() {
 	this.maxDt = 500;
 	
 	this.player.giveMoney(1000);
-	
-	for (var i = 0; i < 5; i++) {
-		var newEnemy = new td.Enemy(3, 0, this.map);
-		this.enemies.addToQueue(newEnemy);
-	}
+	this.enemies.setupWaves(this.map.waves, this.map);
 };
 
 td.Game.prototype.play = function(startTime, interval) {
