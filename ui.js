@@ -1,18 +1,28 @@
 td.UI = function(turrets, towerTypes, player) {
 	this.turrets = turrets;
+	this.player = player;
 	this.towerTypes = towerTypes;
+	this.gameDiv = document.getElementById("game");
 	this.money = document.getElementById("gameMoney");
 	this.gameCover = document.getElementById("gameCover");
-	this.buildList = document.getElementById("gameTowerSelection");
-	this.player = player;
-	this.hideAll();
-	this.gameCover.onclick = this.hideAll.bind(this);
+	
+	// Make the building options list
+	this.buildList = document.createElement("div");
+	this.buildList.id = "buildList";
+	this.gameDiv.appendChild(this.buildList);
 	for (i in this.towerTypes) {
 		var a = document.createElement("a");
 		a.innerHTML = this.towerTypes[i].name;
 		a.id = i;
 		this.buildList.appendChild(a);
 	}
+	this.buildList.height = 5 + 30 * Object.keys(this.towerTypes).length
+	this.buildList.style.height = this.buildList.height + "px";
+	this.buildList.width = 125;
+	this.buildList.style.width = this.buildList.width + "px";
+	
+	this.gameCover.onclick = this.hideAll.bind(this);
+	this.hideAll();
 };
 
 td.UI.prototype.hideAll = function() {
@@ -28,16 +38,14 @@ td.UI.prototype.buildTower = function(type) {
 };
 
 td.UI.prototype.towerSelection = function(x, y) {
-	this.x = x;
-	this.y = y;
 	var xPixPos = x * 50 + 75;
-	var yPixPos = 600 - y * 50 - 125;
-	if (xPixPos > 680) {
-		xPixPos = x * 50 - 150;
+	var yPixPos = 600 - y * 50 - this.buildList.height;
+	if (xPixPos > 800 - this.buildList.width - 25) {
+		xPixPos = x * 50 - this.buildList.width - 25;
 	}
-	if (yPixPos > 375) {
-		yPixPos = 375;
-	} else if (yPixPos < 0) {
+	if (yPixPos > 600 - this.buildList.height - 25) {
+		yPixPos = 600 - this.buildList.height - 25;
+	} else if (yPixPos < 25) {
 		yPixPos = 25;
 	}
 	this.buildList.style.left = xPixPos + "px";
