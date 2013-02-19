@@ -61,7 +61,7 @@ body {
 	margin: 5px auto;
 	display: block;
 	width: 100px;
-	height: 25px;
+	height: 30px;
 	text-align: center;
 	cursor: default;
 	-webkit-touch-callout: none;
@@ -79,4 +79,24 @@ body {
 
 #buildList a:hover {
 	background: rgba(190, 190, 190, 1.0);
+}
+
+#towerStats {
+	background: rgba(215, 215, 215, 1.0);
+	position: absolute;
+}
+
+#statBarBack {
+	background: rgba(100, 100, 100, 1.0);
+	position: absolute;
+}
+
+#statBarFore {
+	background: rgba(200, 200, 150, 1.0);
+	position: absolute;
+}
+
+#statTitle {
+	text-align: center;
+	position: absolute;
 }
