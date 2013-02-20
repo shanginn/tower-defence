@@ -15,12 +15,12 @@ td.Map = function() {
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0]
 	];
-	this.goalHp = 1000;
+	this.goalHp = 100000;
 	this.waves = [
-		{time: 7000, enemies: [1, 1, 1, 1, 1]},
-		{time: 20000, enemies: [1, 1, 1, 1, 1]},
-		{time: 30000, enemies: [1, 1, 1, 1, 1]},
-		{time: 40000, enemies: [1, 1, 1, 1, 1]},
-		{time: 60000, enemies: [1, 1, 1, 1, 1]}	
+		{time: 7000, enemies: [2, 2, 2, 2, 2]},
+		{time: 20000, enemies: [1, 3, 1, 3, 1]},
+		{time: 30000, enemies: [2, 1, 2, 1, 2]},
+		{time: 40000, enemies: [1, 3, 1, 3, 1]},
+		{time: 60000, enemies: [2, 2, 3, 1, 1]}	
 	];
 };

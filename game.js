@@ -1,11 +1,12 @@
 td.Game = function() {
 	this.name = 'gamegamegame';
 	this.towerTypes = td.TurretTypes;
+	this.enemyTypes = td.EnemyTypes;
 	this.map = new td.Map();
 	this.emitter = new td.Emitter();
 	this.bullets = new td.Bullets();
 	this.turrets = new td.Turrets(this.map);
-	this.enemies = new td.Enemies(this.map);
+	this.enemies = new td.Enemies(this.enemyTypes);
 	this.player = new td.Player();
 	this.ui = new td.UI(this.turrets, this.towerTypes, this.player);
 	var input = new td.Input(game);

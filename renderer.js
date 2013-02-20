@@ -58,11 +58,11 @@ td.Renderer.prototype.renderMap = function() {
 			this.context.fillRect(xGrid+1, yGrid+1, this.game.map.gridPixelSize-1,
 				this.game.map.gridPixelSize-1);
 			if (mapLayout[y][x] === 2) {
-				this.context.font = '15pt Arial';
+				this.context.font = '10pt Arial';
 				this.context.textAlign = 'center';
 				this.context.fillStyle = '#111111';
 				this.context.fillText(this.game.map.goalHp, xGrid + this.game.map.gridPixelSize / 2,
-					yGrid + this.game.map.gridPixelSize / 2 + 7);
+					yGrid + this.game.map.gridPixelSize / 2 + 5);
 			}
 		}
 	}
@@ -89,11 +89,27 @@ td.Renderer.prototype.renderEnemies = function() {
 			continue;
 		}
 		var xPixelPos = ((enemies[i].xGrid + (enemies[i].xGridNext - enemies[i].xGrid) *
-			enemies[i].cellProgress) + 0.5) * this.game.map.gridPixelSize - 5;
+			enemies[i].cellProgress) + 0.5) * this.game.map.gridPixelSize;
 		var yPixelPos = ((enemies[i].yGrid + (enemies[i].yGridNext - enemies[i].yGrid) *
-			enemies[i].cellProgress) + 0.5) * this.game.map.gridPixelSize - 5;
-		this.context.fillStyle = '#FF5010';
-		this.context.fillRect(xPixelPos, yPixelPos, 11, 11);
+			enemies[i].cellProgress) + 0.5) * this.game.map.gridPixelSize;
+		var color = "#FF5010";
+		var halfSize = 5;
+		switch (enemies[i].name) {
+			case "scout":
+				color = "#FF5010";
+				halfSize = 4;
+				break;
+			case "heavy":
+				color = "#721F00";
+				halfSize = 7;
+				break;
+			case "soldier":
+				color = "#C13400";
+				halfSize = 5;
+				break;
+		}
+		this.context.fillStyle = color;
+		this.context.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
 	}
 };
 

@@ -1,4 +1,4 @@
-td.Enemy = function(xGridStart, yGridStart, map) {
+td.Enemy = function(xGridStart, yGridStart, map, speed, hp, value, name) {
 	// Currently moving between (xGrid, yGrid) and (xGridNext, yGridNext)
 	this.xGrid = xGridStart;
 	this.yGrid = yGridStart;
@@ -9,11 +9,12 @@ td.Enemy = function(xGridStart, yGridStart, map) {
 	this.yGridNext = this.route[this.routeProgress][1];
 	// Fraction of the way from last current grid cell to next cell
 	this.cellProgress = 0.0;
-	// fraction of cellProgress made in 1ms
-	this.speed = 0.001;
-	this.hp = 50;
+	this.speed = speed;
+	this.hp = hp;
+	this.value = value;
 	this.spawnTime = 0;
 	this.finished = 0;
+	this.name = name;
 };
 
 td.Enemy.prototype.predictPosition = function(t) {

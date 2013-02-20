@@ -1,4 +1,5 @@
-td.Enemies = function() {
+td.Enemies = function(enemyTypes) {
+	this.enemyTypes = enemyTypes;
 	this.active = [];
 	this.enemyQueue = [];
 	this.waves = [];
@@ -17,8 +18,10 @@ td.Enemies.prototype.setupWaves = function(waves, map) {
 };
 
 td.Enemies.prototype.spawnWave = function(wave, map) {
+	var type = 0;
 	for (var i = 0; i < wave.enemies.length; i++) {
-		var newEnemy = new td.Enemy(3, 0, map);
+		type = wave.enemies[i];
+		var newEnemy = new td.Enemy(3, 0, map, this.enemyTypes[type].speed, this.enemyTypes[type].hp, this.enemyTypes[type].value, this.enemyTypes[type].name);
 		newEnemy.spawnTime = wave.time + i * this.spawnInterval;
 		this.addToQueue(newEnemy);
 	}
