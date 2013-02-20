@@ -128,7 +128,7 @@ td.Enemy.prototype.update = function(dt, map, player) {
 
 	if (this.hp <= 0) {
 		this.finished = 1;
-		player.giveMoney(100);
+		player.giveMoney(this.value);
 	}
 	
 	if (this.finished === 1) {

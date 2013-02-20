@@ -69,16 +69,28 @@ td.Renderer.prototype.renderMap = function() {
 };
 
 td.Renderer.prototype.renderTurrets = function() {
-	var turretLayout = this.game.turrets.layout;
-	for (var y = 0; y < turretLayout.length; y++) {
-		for (var x = 0; x < turretLayout[y].length; x++) {
-			if (turretLayout[y][x] === 1) {
-				var xPixelPos = (x + 0.5) * this.game.map.gridPixelSize - 7;
-				var yPixelPos = (y + 0.5) * this.game.map.gridPixelSize - 7;
-				this.context.fillStyle = '#1050FF';
-				this.context.fillRect(xPixelPos, yPixelPos, 16, 16);
-			}
+	var turrets = this.game.turrets.active;
+	for (var i = 0; i < turrets.length; i++) {
+		var xPixelPos = (turrets[i].xGrid + 0.5) * this.game.map.gridPixelSize;
+		var yPixelPos = (turrets[i].yGrid + 0.5) * this.game.map.gridPixelSize;
+		var color = "#1050FF";
+		var halfSize = 5;
+		switch (turrets[i].name) {
+			case "gun":
+				color = "#376DFF";
+				halfSize = 7;
+				break;
+			case "artillery":
+				color = "#002999";
+				halfSize = 12;
+				break;
+			case "heavy mg":
+				color = "#003EE8";
+				halfSize = 9;
+				break;
 		}
+		this.context.fillStyle = color;
+		this.context.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
 	}
 };
 
@@ -136,7 +148,7 @@ td.Renderer.prototype.renderBullets = function() {
 		var xPixel = (bulletList[i].xGrid + 0.5) * this.game.map.gridPixelSize;
 		var yPixel = (bulletList[i].yGrid + 0.5) * this.game.map.gridPixelSize;
 		this.context.strokeStyle = "#341242";
-		this.context.fillStyle = '#FF5010';
+		this.context.fillStyle = '#C81414';
 		this.context.lineWidth = 4;
 		this.context.beginPath();
 		this.context.arc(xPixel, yPixel, 2, 0, 2*Math.PI);

@@ -6,6 +6,7 @@ td.Turret = function(xGrid, yGrid, type) {
 	this.cooldown = window.game.towerTypes[type].cooldown;
 	this.cooldownTimer = 0.0;
 	this.damage = window.game.towerTypes[type].damage;
+	this.name = window.game.towerTypes[type].name;
 	this.finished = 0;
 };
 
