@@ -6,6 +6,11 @@ td.Input = function() {
 	canvas.addEventListener('click', function(e) {
 		ctx.onClick.call(ctx, e);
 	});
+	
+	// Pause while window doesnt have focus
+	window.onblur = function() {window.fsm.stopState()}.bind(this);
+	window.onfocus = function() {window.fsm.startState()}.bind(this);
+
 };
 
 td.Input.prototype.onClick = function(event) {
