@@ -3,6 +3,10 @@ td.FSM = function() {
 	this.prevState = null;
 };
 
+td.FSM.prototype.getName = function() {
+	return this.currentState.name;
+};
+
 td.FSM.prototype.setInitialState = function(aState) {
 	this.currentState = aState;
 	this.currentState.enter();

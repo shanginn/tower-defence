@@ -8,8 +8,11 @@ td.Input = function() {
 	});
 	
 	// Pause while window doesnt have focus
-	window.onblur = function() {window.fsm.stopState()}.bind(this);
-	window.onfocus = function() {window.fsm.startState()}.bind(this);
+	window.onblur = function() {
+		if (window.fsm.getName() !== "pause") {
+			window.fsm.changeState(window.pause);
+		}
+	}.bind(this);
 
 };
 

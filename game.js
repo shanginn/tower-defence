@@ -23,7 +23,6 @@ td.GameState.prototype.enter = function() {
 		console.log("play");
 		this.play(Math.round(1000/60));
 	} else {
-		console.log("resume");
 		this.resume(Math.round(1000/60));
 	}
 };
@@ -40,7 +39,6 @@ td.GameState.prototype.resume = function(interval) {
 };
 
 td.GameState.prototype.exit = function() {
-	console.log("pausing");
 	this.pause();
 };
 

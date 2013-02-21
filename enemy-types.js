@@ -3,8 +3,8 @@ td.EnemyTypes = {
 	// Scout
 	1: {
 		speed: 0.0012,
-		hp: 250,
-		value: 20,
+		hp: 25,
+		value: 25,
 		name: "scout",
 		description: "Fast and weak"
 	},
@@ -12,8 +12,8 @@ td.EnemyTypes = {
 	// Heavy
 	2: {
 		speed: 0.0005,
-		hp: 1500,
-		value: 1,
+		hp: 100,
+		value: 100,
 		name: "heavy",
 		description: "Slow, but knows how to take a punch"
 	},
@@ -21,8 +21,8 @@ td.EnemyTypes = {
 	// Soldier
 	3: {
 		speed: 0.0008,
-		hp: 500,
-		value: 20,
+		hp: 50,
+		value: 50,
 		name: "soldier",
 		description: "Average in every way"
 	}

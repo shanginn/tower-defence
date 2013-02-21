@@ -5,6 +5,22 @@ td.UI = function(turrets, towerTypes, player) {
 	this.gameDiv = document.getElementById("game");
 	this.money = document.getElementById("gameMoney");
 	this.gameCover = document.getElementById("gameCover");
+	this.gameStats = document.getElementById("gameStats");
+	
+	// Make a pause button
+	this.pauseButton = document.createElement("div");
+	this.gameStats.appendChild(this.pauseButton);
+	this.pauseButton.id = "pause";
+	this.pauseButton.style.width = "150px";
+	this.pauseButton.style.height = "25px";
+	this.pauseButton.innerHTML = "Pause";
+	this.pauseButton.onclick = function() {
+		if (window.fsm.getName() === "pause") {
+			window.fsm.gotoPrevState();
+		} else {
+			window.fsm.changeState(window.pause);
+		}
+	}.bind(this);
 	
 	// Make the building options list
 	this.buildList = document.createElement("div");
