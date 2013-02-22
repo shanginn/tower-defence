@@ -1,5 +1,6 @@
-td.GameState = function() {
+td.GameState = function(ui) {
 	this.name = 'gamegamegame';
+	this.ui = ui;
 	this.towerTypes = td.TurretTypes;
 	this.enemyTypes = td.EnemyTypes;
 	this.map = new td.Map();
@@ -8,12 +9,12 @@ td.GameState = function() {
 	this.turrets = new td.Turrets(this.map);
 	this.enemies = new td.Enemies(this.enemyTypes);
 	this.player = new td.Player();
-	this.ui = new td.UI(this.turrets, this.towerTypes, this.player);
-	var input = new td.Input(game);
+	this.input = new td.Input(game);
 	this.player.setUI(this.ui);
+	this.ui.setup(this.turrets, this.towerTypes, this.player);
 	this.maxDt = 500;
 	this.timer = null;
-	
+
 	this.player.giveMoney(1000);
 	this.enemies.setupWaves(this.map.waves, this.map);
 };

@@ -1,4 +1,8 @@
-td.UI = function(turrets, towerTypes, player) {
+td.UI = function() {
+
+};
+
+td.UI.prototype.setup = function(turrets, towerTypes, player) {
 	this.turrets = turrets;
 	this.player = player;
 	this.towerTypes = towerTypes;
