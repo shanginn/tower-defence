@@ -1,30 +1,15 @@
 td.UI = function() {
-
+	this.gameDiv = document.getElementById("game");
+	this.money = document.getElementById("gameMoney");
+	this.gameCover = document.getElementById("gameCover");
+	this.pauseCover = document.getElementById("pauseCover");
+	this.gameStats = document.getElementById("gameStats");
 };
 
 td.UI.prototype.setup = function(turrets, towerTypes, player) {
 	this.turrets = turrets;
 	this.player = player;
 	this.towerTypes = towerTypes;
-	this.gameDiv = document.getElementById("game");
-	this.money = document.getElementById("gameMoney");
-	this.gameCover = document.getElementById("gameCover");
-	this.gameStats = document.getElementById("gameStats");
-	
-	// Make a pause button
-	this.pauseButton = document.createElement("div");
-	this.gameStats.appendChild(this.pauseButton);
-	this.pauseButton.id = "pause";
-	this.pauseButton.style.width = "150px";
-	this.pauseButton.style.height = "25px";
-	this.pauseButton.innerHTML = "Pause";
-	this.pauseButton.onclick = function() {
-		if (window.fsm.getName() === "pause") {
-			window.fsm.gotoPrevState();
-		} else {
-			window.fsm.changeState(window.pause);
-		}
-	}.bind(this);
 	
 	// Make the building options list
 	this.buildList = document.createElement("div");
@@ -140,7 +125,36 @@ td.UI.prototype.setup = function(turrets, towerTypes, player) {
 		}.bind(this, i);
 	}
 	
-	this.gameCover.onclick = this.hideAll.bind(this);
+	// Make a pause button
+	this.pauseButton = document.createElement("div");
+	this.gameStats.appendChild(this.pauseButton);
+	this.pauseButton.id = "pause";
+	this.pauseButton.style.width = "176px";
+	this.pauseButton.style.height = "25px";
+	this.pauseButton.style.right = "10px";
+	this.pauseButton.style.bottom = "10px";
+	this.pauseButton.innerHTML = "Pause";
+	this.pauseButton.onclick = function() {
+		if (window.fsm.getName() === "pause") {
+			window.fsm.gotoPrevState();
+		} else {
+			window.fsm.changeState(window.pause);
+		}
+	}.bind(this);
+	
+	// Make pause message
+	this.pauseCover = document.createElement("div");
+	this.pauseCover.id = "pauseCover";
+	this.gameDiv.appendChild(this.pauseCover);
+	this.pauseMessage = document.createElement("div");
+	this.pauseCover.appendChild(this.pauseMessage);
+	this.pauseMessage.id = "pauseMessage";
+	this.pauseMessage.style.width = "300px";
+	this.pauseMessage.style.height = "50px";
+	this.pauseMessage.style.left = "250px";
+	this.pauseMessage.style.top = "250px";
+	this.pauseMessage.innerHTML = "Paused";
+	
 	this.hideAll();
 };
 
@@ -150,11 +164,21 @@ td.UI.prototype.hideAll = function() {
 	this.towerStats.style.visibility = "hidden";
 };
 
+td.UI.prototype.pauseOn = function() {
+	this.pauseButton.innerHTML = "Unpause";
+	this.pauseCover.style.visibility = "visible";
+};
+
+td.UI.prototype.pauseOff = function() {
+	this.pauseButton.innerHTML = "Pause";
+	this.pauseCover.style.visibility = "hidden";
+	};
+
 td.UI.prototype.buildTower = function(type) {
 	this.player.giveMoney(-this.towerTypes[type].cost);
 	this.turrets.spawn(this.x, this.y, type);
 	this.hideAll();
-
+	this.gameCover.onclick = null;
 };
 
 td.UI.prototype.towerSelection = function(x, y) {
@@ -194,6 +218,8 @@ td.UI.prototype.towerSelection = function(x, y) {
 	
 	this.towerStats.style.left = tSX + "px";
 	this.towerStats.style.bottom = tSY + "px";
+	
+	this.gameCover.onclick = this.hideAll.bind(this);
 	
 	this.gameCover.style.visibility = "visible";
 	this.buildList.style.visibility = "visible";
