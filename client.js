@@ -1,5 +1,4 @@
 window.onload = function() {
-//	this.ui = new td.UI(this.turrets, this.towerTypes, this.player);
 	window.ui = new td.UI();
 	window.game = new td.GameState(this.ui);
 	window.pause = new td.PauseState(this.ui);

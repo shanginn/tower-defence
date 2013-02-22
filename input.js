@@ -9,7 +9,7 @@ td.Input = function() {
 	
 	// Pause while window doesnt have focus
 	window.onblur = function() {
-		if (window.fsm.getName() !== "pause") {
+		if (window.fsm.getName() === "gamegamegame") {
 			window.fsm.changeState(window.pause);
 		}
 	}.bind(this);
