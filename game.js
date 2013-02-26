@@ -1,31 +1,53 @@
-td.GameState = function(ui) {
+td.GameState = function(canvas) {
 	this.name = 'gamegamegame';
-	this.ui = ui;
-	this.towerTypes = td.TurretTypes;
-	this.enemyTypes = td.EnemyTypes;
-	this.map = new td.Map();
+	this.towerTypes = null;
+	this.enemyTypes = null;
+	this.map = null;
+	this.emitter = null;
+	this.bullets = null;
+	this.turrets = null;
+	this.enemies = null;
+	this.player = null;
+	this.ui = null;
+	
+	this.canvas = canvas;
+	this.canvas.width = 800;
+	this.canvas.height = 600;
+	this.ctx = window.canvas.getContext("2d");
+	
+	this.renderer = new td.Renderer(this.canvas, this);
+	this.ui = new td.UI();
 	this.emitter = new td.Emitter();
+	
+	this.timer = null;
+	
+	this.setup();
+	this.boundClickHandler = this.clickHandler.bind(this);
+	this.boundBlur = this.onBlur.bind(this);
+};
+
+td.GameState.prototype.setup = function() {
+	this.enemyTypes = td.EnemyTypes;
+	this.towerTypes = td.TurretTypes;
+	this.map = new td.Map();
 	this.bullets = new td.Bullets();
 	this.turrets = new td.Turrets(this.map);
 	this.enemies = new td.Enemies(this.enemyTypes);
 	this.player = new td.Player();
-	this.input = new td.Input(game);
-	this.player.setUI(this.ui);
-	this.ui.setup(this.turrets, this.towerTypes, this.player);
-	this.maxDt = 500;
-	this.timer = null;
-
+	this.ui.setup(this.turrets, this.towerTypes, this.player, this.map);
+	this.turrets.setup(this.player);
 	this.player.giveMoney(1000);
 	this.enemies.setupWaves(this.map.waves, this.map);
 };
 
 td.GameState.prototype.enter = function() {
 	if (this.timer === null) {
-		console.log("play");
 		this.play(Math.round(1000/60));
 	} else {
 		this.resume(Math.round(1000/60));
 	}
+	this.addClickListener();
+	this.renderer.startRendering();
 };
 
 td.GameState.prototype.resume = function(interval) {
@@ -41,6 +63,7 @@ td.GameState.prototype.resume = function(interval) {
 
 td.GameState.prototype.exit = function() {
 	this.pause();
+	this.removeClickListener();
 };
 
 td.GameState.prototype.play = function(interval) {
@@ -57,19 +80,33 @@ td.GameState.prototype.play = function(interval) {
 
 td.GameState.prototype.pause = function() {
 	clearInterval(this.timer);
+	this.renderer.stopRendering();
 }
 
 td.GameState.prototype.update = function(dt) {
-	if (dt < 0) {
-		console.log("Can't go back in time");
-	}
-	if (dt > this.maxDt) {
-		console.log("Can't jump so far forward in time");
-		dt = this.maxDt;
-	}
 	this.enemies.update(dt, this.map, this.timeStamp, this.player);
 	this.turrets.update(dt, this.enemies.active, this.bullets);
 	this.bullets.update(dt);
 	this.emitter.update(dt);
 	this.timeStamp += dt;
+};
+
+td.GameState.prototype.addClickListener = function() {
+	this.canvas.addEventListener("click", this.boundClickHandler, false);
+	window.addEventListener("blur", this.boundBlur, false);
+};
+
+td.GameState.prototype.removeClickListener = function() {
+	this.canvas.removeEventListener("click", this.boundClickHandler, false);
+	window.removeEventListener("blur", this.boundBlur, false);
+};
+
+td.GameState.prototype.clickHandler = function(evt) {
+	var mcX = evt.clientX - evt.target.getBoundingClientRect().left;
+	var mcY = evt.clientY - evt.target.getBoundingClientRect().top;
+	this.ui.click(mcX, mcY);
+};
+
+td.GameState.prototype.onBlur = function() {
+	window.fsm.changeState(window.pause);
 };

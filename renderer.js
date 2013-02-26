@@ -1,4 +1,14 @@
 // shim layer with setTimeout fallback
+
+window.cancelRequestAnimFrame = ( function() {
+    return window.cancelAnimationFrame          ||
+        window.webkitCancelRequestAnimationFrame    ||
+        window.mozCancelRequestAnimationFrame       ||
+        window.oCancelRequestAnimationFrame     ||
+        window.msCancelRequestAnimationFrame        ||
+        clearTimeout
+} )();
+
 window.requestAnimFrame = (function(){
 	return window.requestAnimationFrame ||
 	window.webkitRequestAnimationFrame ||
@@ -10,36 +20,31 @@ window.requestAnimFrame = (function(){
 	};
 })();
 
-td.Renderer = function(game) {
+td.Renderer = function(canvas, game) {
 	this.game = game;
-	this.canvas = document.getElementById('gameCanvas');
-	this.canvas.width = 800;	// Lets go with a fixed canvas size
-	this.canvas.height = 600;	// of 800 x 600 for now. Nothing fancy.
-	this.context = this.canvas.getContext('2d');
+	this.canvas = canvas;
+	this.ctx = this.canvas.getContext('2d');
+	this.raf = null;
 };
 
-td.Renderer.prototype.render = function() {
-	this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+td.Renderer.prototype.startRendering = function() {
+	var _this = this;
+	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	
-	// Map - could be done on a separate layer removing the need to redraw
 	this.renderMap();
-	
-	// Turrets
 	this.renderTurrets();
-	
-	// Enemies
 	this.renderEnemies();
-	
-	// Tracers
 	this.renderTracers();
-	
-	// Bullets
 	this.renderBullets();
+	this.game.ui.render(this.ctx);
 	
-	var ctx = this;
-	requestAnimFrame(function() {
-		ctx.render.call(ctx);
-	});
+	this.raf = requestAnimFrame(function() {
+		_this.startRendering();
+	}, this.ctx);
+};
+
+td.Renderer.prototype.stopRendering = function() {
+	cancelRequestAnimFrame(this.raf);
 };
 
 td.Renderer.prototype.renderMap = function() {
@@ -47,21 +52,21 @@ td.Renderer.prototype.renderMap = function() {
 	for (var y = 0; y < mapLayout.length; y++) {
 		for (var x = 0; x < mapLayout[y].length; x++) {
 			if (mapLayout[y][x] === 0) {
-				this.context.fillStyle = '#888888';
+				this.ctx.fillStyle = '#888888';
 			} else if (mapLayout[y][x] === 1) {
-				this.context.fillStyle = '#CCCCCC';
+				this.ctx.fillStyle = '#CCCCCC';
 			} else if (mapLayout[y][x] === 2) {
-				this.context.fillStyle = '#FF8866';
+				this.ctx.fillStyle = '#FF8866';
 			}
 			var xGrid = x * this.game.map.gridPixelSize;
 			var yGrid = y * this.game.map.gridPixelSize;
-			this.context.fillRect(xGrid+1, yGrid+1, this.game.map.gridPixelSize-1,
+			this.ctx.fillRect(xGrid+1, yGrid+1, this.game.map.gridPixelSize-1,
 				this.game.map.gridPixelSize-1);
 			if (mapLayout[y][x] === 2) {
-				this.context.font = '10pt Arial';
-				this.context.textAlign = 'center';
-				this.context.fillStyle = '#111111';
-				this.context.fillText(this.game.map.goalHp, xGrid + this.game.map.gridPixelSize / 2,
+				this.ctx.font = '10pt Arial';
+				this.ctx.textAlign = 'center';
+				this.ctx.fillStyle = '#111111';
+				this.ctx.fillText(this.game.map.goalHp, xGrid + this.game.map.gridPixelSize / 2,
 					yGrid + this.game.map.gridPixelSize / 2 + 5);
 			}
 		}
@@ -89,8 +94,8 @@ td.Renderer.prototype.renderTurrets = function() {
 				halfSize = 9;
 				break;
 		}
-		this.context.fillStyle = color;
-		this.context.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
+		this.ctx.fillStyle = color;
+		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
 	}
 };
 
@@ -120,8 +125,8 @@ td.Renderer.prototype.renderEnemies = function() {
 				halfSize = 5;
 				break;
 		}
-		this.context.fillStyle = color;
-		this.context.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
+		this.ctx.fillStyle = color;
+		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
 	}
 };
 
@@ -131,13 +136,13 @@ td.Renderer.prototype.renderTracers = function() {
 		var yPixelStart = (this.game.emitter.tracerPool[i].yStart + 0.5) * this.game.map.gridPixelSize;
 		var xPixelEnd = (this.game.emitter.tracerPool[i].xEnd + 0.5) * this.game.map.gridPixelSize;
 		var yPixelEnd = (this.game.emitter.tracerPool[i].yEnd + 0.5) * this.game.map.gridPixelSize;
-		this.context.strokeStyle = this.game.emitter.tracerPool[i].color;
-		this.context.lineWidth = 4;
-		this.context.beginPath();
-		this.context.moveTo(xPixelStart, yPixelStart);
-		this.context.lineTo(xPixelEnd, yPixelEnd);
-		this.context.stroke();
-		this.context.closePath();
+		this.ctx.strokeStyle = this.game.emitter.tracerPool[i].color;
+		this.ctx.lineWidth = 4;
+		this.ctx.beginPath();
+		this.ctx.moveTo(xPixelStart, yPixelStart);
+		this.ctx.lineTo(xPixelEnd, yPixelEnd);
+		this.ctx.stroke();
+		this.ctx.closePath();
 	}
 };
 
@@ -147,12 +152,12 @@ td.Renderer.prototype.renderBullets = function() {
 	for (var i = 0; i < liveNum; i++) {
 		var xPixel = (bulletList[i].xGrid + 0.5) * this.game.map.gridPixelSize;
 		var yPixel = (bulletList[i].yGrid + 0.5) * this.game.map.gridPixelSize;
-		this.context.strokeStyle = "#341242";
-		this.context.fillStyle = '#C81414';
-		this.context.lineWidth = 4;
-		this.context.beginPath();
-		this.context.arc(xPixel, yPixel, 2, 0, 2*Math.PI);
-		this.context.fill();
-		this.context.closePath();
+		this.ctx.strokeStyle = "#341242";
+		this.ctx.fillStyle = '#C81414';
+		this.ctx.lineWidth = 4;
+		this.ctx.beginPath();
+		this.ctx.arc(xPixel, yPixel, 2, 0, 2*Math.PI);
+		this.ctx.fill();
+		this.ctx.closePath();
 	}
 };
