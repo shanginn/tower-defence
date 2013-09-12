@@ -1,12 +1,16 @@
 td.Turret = function(xGrid, yGrid, type) {
 	this.xGrid = xGrid;
 	this.yGrid = yGrid;
+	this.lvl = window.game.towerTypes[type].lvl;
 	this.range = window.game.towerTypes[type].range;  // measured in grid cells
 	this.target = null;
 	this.cooldown = window.game.towerTypes[type].cooldown;
 	this.cooldownTimer = 0.0;
 	this.damage = window.game.towerTypes[type].damage;
+	this.cost = window.game.towerTypes[type].cost;
 	this.name = window.game.towerTypes[type].name;
+	this.color = window.game.towerTypes[type].color;
+	this.halfSize = window.game.towerTypes[type].halfSize;
 	this.finished = 0;
 };
 

@@ -82,7 +82,7 @@ td.Enemy.prototype.findRoute = function(route, routeLength, x0, y0, map) {
 		}
 		noInfLoopCounter++;
 		if (noInfLoopCounter === 1000) {
-			console.log("failed to find route");
+			//console.log("failed to find route");
 			return false;
 		}
 	}
@@ -129,6 +129,8 @@ td.Enemy.prototype.update = function(dt, map, player) {
 	if (this.hp <= 0) {
 		this.finished = 1;
 		player.giveMoney(this.value);
+		td.Enemies.enemyCount--;
+		//console.log(td.Enemies.enemyCount);
 	}
 	
 	if (this.finished === 1) {
@@ -143,8 +145,14 @@ td.Enemy.prototype.update = function(dt, map, player) {
 		// our remaining hp
 		if (map.layout[this.yGridNext][this.xGridNext] === 2) {
 			map.goalHp -= this.hp;
+			if(map.goalHp<=0){
+				map.goalHp=0;
+				window.fsm.changeState(window.dead);
+			}
 			this.hp = 0;
 			this.finished = 1;
+			td.Enemies.enemyCount--;
+			gameHP.textContent = map.goalHp;
 		} else {
 			this.routeProgress++;
 			this.xGrid = this.xGridNext;

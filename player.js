@@ -1,13 +1,17 @@
 td.Player = function() {
 	this.money = 0;
-//	this.ui = null;
+	//this.setUI('gameStats')
 };
 
-td.Player.prototype.setUI = function(ui) {
-//	this.ui = ui;
+/*td.Player.prototype.setUI = function(ui) {
+	this.ui = ui;
 };
-
-td.Player.prototype.giveMoney = function(val, ui) {
+*/
+td.Player.prototype.giveMoney = function(val) {
 	this.money += val;
-//	this.ui.updateMoney(this.money);
+	this.updateMoney(this.money);
 };
+
+td.Player.prototype.updateMoney = function(mon) {
+	gameMoney.textContent = mon;
+}

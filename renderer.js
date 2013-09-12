@@ -46,6 +46,9 @@ td.Renderer.prototype.startRendering = function() {
 td.Renderer.prototype.stopRendering = function() {
 	cancelRequestAnimFrame(this.raf);
 };
+td.Renderer.prototype.setCell = function (cellX,cellY,arg) {
+	this.game.map.layout[cellX][cellY] = arg;
+}
 
 td.Renderer.prototype.renderMap = function() {
 	var mapLayout = this.game.map.layout;
@@ -57,11 +60,14 @@ td.Renderer.prototype.renderMap = function() {
 				this.ctx.fillStyle = '#CCCCCC';
 			} else if (mapLayout[y][x] === 2) {
 				this.ctx.fillStyle = '#FF8866';
-			}
+			}/* else if (mapLayout[y][x] === 3) {
+				this.ctx.fillStyle = "rgba(0.7, 0.1, 0.3, 0.2)";;
+			}*/
 			var xGrid = x * this.game.map.gridPixelSize;
 			var yGrid = y * this.game.map.gridPixelSize;
 			this.ctx.fillRect(xGrid+1, yGrid+1, this.game.map.gridPixelSize-1,
 				this.game.map.gridPixelSize-1);
+/* хп на последней клетке
 			if (mapLayout[y][x] === 2) {
 				this.ctx.font = '10pt Arial';
 				this.ctx.textAlign = 'center';
@@ -69,6 +75,7 @@ td.Renderer.prototype.renderMap = function() {
 				this.ctx.fillText(this.game.map.goalHp, xGrid + this.game.map.gridPixelSize / 2,
 					yGrid + this.game.map.gridPixelSize / 2 + 5);
 			}
+*/			
 		}
 	}
 };
@@ -80,23 +87,13 @@ td.Renderer.prototype.renderTurrets = function() {
 		var yPixelPos = (turrets[i].yGrid + 0.5) * this.game.map.gridPixelSize;
 		var color = "#1050FF";
 		var halfSize = 5;
-		switch (turrets[i].name) {
-			case "gun":
-				color = "#376DFF";
-				halfSize = 7;
-				break;
-			case "artillery":
-				color = "#002999";
-				halfSize = 12;
-				break;
-			case "heavy mg":
-				color = "#003EE8";
-				halfSize = 9;
-				break;
-		}
-		this.ctx.fillStyle = color;
-		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
-	}
+		this.ctx.beginPath();
+		this.ctx.fillStyle = turrets[i].color;
+		//console.log(turrets[i].halfSize);
+		this.ctx.fillRect(xPixelPos - turrets[i].halfSize, yPixelPos - turrets[i].halfSize, 2 * turrets[i].halfSize, 2 * turrets[i].halfSize);
+		this.ctx.fill();
+		this.ctx.closePath();		
+	}	
 };
 
 td.Renderer.prototype.renderEnemies = function() {
@@ -127,6 +124,12 @@ td.Renderer.prototype.renderEnemies = function() {
 		}
 		this.ctx.fillStyle = color;
 		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
+
+		this.ctx.fillStyle = "#a5260a";
+		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 5 - halfSize, enemies[i].hp/5, 3);
+		//this.ctx.fillStyle = "#af4035";
+		//this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 10 - halfSize, enemies[i].hp, 2);
+
 	}
 };
 

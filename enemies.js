@@ -6,8 +6,9 @@ td.Enemies = function(enemyTypes) {
 	this.nextWaveTime = 5000.0;
 	this.maxQueueSize = 10;
 	this.spawnInterval = 1000.0;
-	this.spawning = 0;
 	this.nextSpawn = 0.0;
+	td.Enemies.enemyCount = 0;
+	td.Enemies.spawning = 0;
 };
 
 td.Enemies.prototype.setupWaves = function(waves, map) {
@@ -25,11 +26,15 @@ td.Enemies.prototype.spawnWave = function(wave, map) {
 		newEnemy.spawnTime = wave.time + i * this.spawnInterval;
 		this.addToQueue(newEnemy);
 	}
+	td.Enemies.spawning++;
+	gameWave.textContent = td.Enemies.spawning;
 };
 
 td.Enemies.prototype.addToQueue = function (enemy) {
 	if (this.enemyQueue.length < this.maxQueueSize) {
 		this.enemyQueue.push(enemy);
+		td.Enemies.enemyCount++;
+		//console.log(td.Enemies.enemyCount);
 	}
 };
 
@@ -55,6 +60,10 @@ td.Enemies.prototype.update = function(dt, map, ct, player) {
 		this.spawnWave(this.waves[0], map);
 		this.waves.splice(0, 1);
 	}
+	if (td.Enemies.enemyCount == 0 && this.enemyQueue.length == 0 && this.waves.length == 0){
+		window.fsm.changeState(window.win);
+	}
+	////console.log(this.enemyQueue);
 
 	for (var i = 0; i < this.active.length; i++) {
 		if (this.active[i].finished === 0) {

@@ -27,14 +27,31 @@
 	<script src="fsm.js"></script>
 	<script src="client.js"></script>
 </head>
+
+<script>
+function pse(){
+	if (window.fsm.getName() === "gamegamegame") {
+			window.fsm.changeState(window.pause);
+		}
+}	
+</script>
+
 <body>
 	<div role="main" id="game">
-		<canvas id="gameCanvas" width=400>Get some canvas!</canvas>
-<!--		<div id="gameCover"></div>
-		<div id="gameStats">
-			<div id="gameMoney"></div>
+		<div style="position:relative">
+			<canvas id="gameCanvas" width='400'></canvas>
+			<input style="display:none" class="button" type="button" id="restart" value="Restart" onClick="window.location.reload(); document.getElementById('restart').style.display = 'none';">
 		</div>
-		<div id="pauseCover"></div> -->
+		<div id="gameStats">
+			<table>
+				<tr><div id="gameMoney" class="gameValues">0</div></tr>
+				<tr><div id="gameWave" class="gameValues">0</div></tr>
+				<tr><div id="gameHP" class="gameValues">0</div></tr>
+			</table>
+			<div id="pause">
+				<input class="button" type="button" value="Pause" onClick="pse();">
+			</div>
+		</div>
 	</div>
 </body>
 </html>

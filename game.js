@@ -11,7 +11,7 @@ td.GameState = function(canvas) {
 	this.ui = null;
 	
 	this.canvas = canvas;
-	this.canvas.width = 800;
+	this.canvas.width = 600;
 	this.canvas.height = 600;
 	this.ctx = window.canvas.getContext("2d");
 	
@@ -34,9 +34,9 @@ td.GameState.prototype.setup = function() {
 	this.turrets = new td.Turrets(this.map);
 	this.enemies = new td.Enemies(this.enemyTypes);
 	this.player = new td.Player();
-	this.ui.setup(this.turrets, this.towerTypes, this.player, this.map);
+	this.ui.setup(this.turrets, this.towerTypes, this.player, this.map, this);
 	this.turrets.setup(this.player);
-	this.player.giveMoney(1000);
+	this.player.giveMoney(600);
 	this.enemies.setupWaves(this.map.waves, this.map);
 };
 
@@ -79,6 +79,11 @@ td.GameState.prototype.play = function(interval) {
 };
 
 td.GameState.prototype.pause = function() {
+	clearInterval(this.timer);
+	this.renderer.stopRendering();
+}
+
+td.GameState.prototype.dead = function() {
 	clearInterval(this.timer);
 	this.renderer.stopRendering();
 }

@@ -18,14 +18,23 @@ td.Map = function() {
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0]
 	];
+	/*
+		0 - пусто
+		1 - дорога
+		2 - турель 1
+		3 - турель 2
+		4 - турель 3
+
+	*/
 	this.nx = this.layout[0].length;
 	this.ny = this.layout.length;
-	this.goalHp = 100000;
+	this.goalHp = 50;
+	gameHP.textContent = this.goalHp;
 	this.waves = [
-		{time: 7000, enemies: [2, 2, 2, 2, 2]},
-		{time: 20000, enemies: [1, 3, 1, 3, 1]},
-		{time: 30000, enemies: [2, 1, 2, 1, 2]},
-		{time: 40000, enemies: [1, 3, 1, 3, 1]},
-		{time: 60000, enemies: [2, 2, 3, 1, 1]}	
+		{time: 2000, enemies:	[2, 2, 2, 2, 2]},
+		{time: 20000, enemies:	[1, 3, 1, 3, 1]},
+		{time: 30000, enemies:	[2, 1, 2, 1, 2]},
+		{time: 40000, enemies:	[1, 3, 1, 3, 1]},
+		{time: 60000, enemies:	[2, 2, 3, 1, 1]}	
 	];
 };
