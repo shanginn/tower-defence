@@ -87,12 +87,14 @@ td.Renderer.prototype.renderTurrets = function() {
 		var yPixelPos = (turrets[i].yGrid + 0.5) * this.game.map.gridPixelSize;
 		var color = "#1050FF";
 		var halfSize = 5;
-		this.ctx.beginPath();
-		this.ctx.fillStyle = turrets[i].color;
-		//console.log(turrets[i].halfSize);
-		this.ctx.fillRect(xPixelPos - turrets[i].halfSize, yPixelPos - turrets[i].halfSize, 2 * turrets[i].halfSize, 2 * turrets[i].halfSize);
-		this.ctx.fill();
-		this.ctx.closePath();		
+		for(var i=1;i<turrets[i].lvl+1;i++){
+			this.ctx.beginPath();
+			this.ctx.fillStyle = turrets[i].color;
+			//console.log(turrets[i].halfSize);
+			this.ctx.fillRect(xPixelPos - turrets[i].halfSize, yPixelPos - turrets[i].halfSize, 2 * turrets[i].halfSize, 2 * turrets[i].halfSize);
+			this.ctx.fill();
+			this.ctx.closePath();
+		}		
 	}	
 };
 

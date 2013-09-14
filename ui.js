@@ -9,46 +9,16 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	this.towerTypesLength = Object.keys(this.towerTypes).length;
 	this.map = map;
 	this.game = game;
-	
-	// Stats panel on the right side of the map
-/*
-	this.statsRect = {};
-	this.statsRect.x0 = this.map.nx * this.map.gridPixelSize;
-	this.statsRect.x1 = 800;
-	this.statsRect.y0 = 0;
-	this.statsRect.y1 = 600;
-	this.statsRect.visible = true;
-	this.statsRect.color = "#223300";
-	this.statsRect.captureClick = false;
-	this.statsRect.w = this.statsRect.x1 - this.statsRect.x0;
-	this.statsRect.h = this.statsRect.y1 - this.statsRect.y0;
-	this.activeStack.push(this.statsRect);
 
-	// Make pause button
-	this.pauseButton = {};
-	this.pauseButton.x0 = this.statsRect.x0 + 10;
-	this.pauseButton.x1 = this.statsRect.x1 - 10;
-	this.pauseButton.y0 = this.statsRect.y1 - 40;
-	this.pauseButton.y1 = this.statsRect.y1 - 10;
-	this.pauseButton.w = this.pauseButton.x1 - this.pauseButton.x0;
-	this.pauseButton.h = this.pauseButton.y1 - this.pauseButton.y0;
-	this.pauseButton.visible = true;
-	this.pauseButton.color = "red";
-	this.pauseButton.text = "Pause";
-	this.pauseButton.colorFG = "black";
-	this.pauseButton.captureClick = true;
-	this.pauseButton.click = function() {
-		window.fsm.changeState(window.pause);
-	}
-	this.activeStack.push(this.pauseButton);
-*/	
+	
 	// Map
 	var wt=150;
 	var ht=25;
 	var	whatUnder;	// 0 - Ничего
 					// 1 - Турель
 					// 2 - Земля
-
+	var n = 7; // Сколько вещей рисуется
+	 
 	this.mapArea = {};
 	this.mapArea.x0 = 0;
 	this.mapArea.x1 = this.map.nx * this.map.gridPixelSize;
@@ -59,7 +29,7 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	this.mapArea.visible = false;
 	this.mapArea.captureClick = true;
 	this.mapArea.click = function(x, y) {
-
+		
 		var xCell = Math.floor(x / this.map.gridPixelSize);
 		var yCell = Math.floor(y / this.map.gridPixelSize);
 		var clickedTurret = this.turrets.check(xCell,yCell);
@@ -97,9 +67,15 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			this.fireRange.visible = true;
 			this.fireRange.color = "rgba(1, 1, 1, 0.3)";
 			this.activeStack.push(this.fireRange);
-			this.turretButtons[2].text = "Продать: +" + Math.floor(clickedTurret.cost/3);
-			this.turretButtons[1].text = "Улучшить: -" + Math.floor(clickedTurret.cost/2);
 			this.turretButtons[0].text = (clickedTurret.lvl + 1 )  + " уровень.";
+			if(clickedTurret.lvl<5) this.turretButtons[1].text = "Улучшить: -" + Math.floor(clickedTurret.cost/2);
+			else {
+				this.turretButtons[1].text = "Улучшить."
+				this.turretButtons[1].color = "rgba(0 ,0 ,0 ,0.2)";
+				this.turretButtons[1].captureClick = false;
+			}
+			this.turretButtons[2].text = "Продать: +" + Math.floor(clickedTurret.cost/3);
+			
 			for (var i = 0; i < 3; i++) {
 				this.turretButtons[i].x0 = xPos + 25;
 				this.turretButtons[i].y0 = yPos + i * 30 ;
@@ -161,34 +137,14 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	this.turretButtons[0].y1 = 0;
 	this.turretButtons[0].w = wt;
 	this.turretButtons[0].h = ht;
-	this.turretButtons[0].color = "rgba(1 ,1 ,1 ,0,2)";
+	this.turretButtons[0].color = "rgba(1 ,1 ,1 ,0.2)";
 	this.turretButtons[0].visible = true;
-	//this.turretButtons[0].captureClick = true;
 	this.turretButtons[0].xBuildCell = 0;
 	this.turretButtons[0].yBuildCell = 0;
 	this.turretButtons[0].colorFG = "black";
 	this.turretButtons[0].textStyle = '14pt Arial';
 
-	//Кнопка продажи
-
-	this.turretButtons[2].x0 = 0;
-	this.turretButtons[2].x1 = 0;
-	this.turretButtons[2].y0 = 0;
-	this.turretButtons[2].y1 = 0;
-	this.turretButtons[2].w = wt;
-	this.turretButtons[2].h = ht;
-	this.turretButtons[2].color = "#CCDDEE";
-	this.turretButtons[2].visible = true;
-	this.turretButtons[2].captureClick = true;
-	this.turretButtons[2].xBuildCell = 0;
-	this.turretButtons[2].yBuildCell = 0;
-	this.turretButtons[2].colorFG = "black";
-	this.turretButtons[2].textStyle = '14pt Arial';
-	this.turretButtons[2].click = function(i) {
-		this.turrets.sell(this.activeStack[1].xGrid,this.activeStack[1].yGrid);
-		this.activeStack.splice(-6, 6);	// Удаление всего из списка рисования
-	}.bind(this, i);
-	
+		
 	//Кнопка апгрейда
 	this.turretButtons[1].x0 = 0;
 	this.turretButtons[1].x1 = 0;
@@ -205,8 +161,28 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	this.turretButtons[1].textStyle = '14pt Arial';
 	this.turretButtons[1].click = function(i) {
 		this.turrets.upgrade(this.activeStack[1].xGrid,this.activeStack[1].yGrid);
-		this.activeStack.splice(-6, 6);	// Удаление всего из списка рисования
+		this.activeStack.splice(-n, n);	// Удаление всего из списка рисования
 	}.bind(this, i);
+
+	//Кнопка продажи
+	this.turretButtons[2].x0 = 0;
+	this.turretButtons[2].x1 = 0;
+	this.turretButtons[2].y0 = 0;
+	this.turretButtons[2].y1 = 0;
+	this.turretButtons[2].w = wt;
+	this.turretButtons[2].h = ht;
+	this.turretButtons[2].color = "#CCDDEE";
+	this.turretButtons[2].visible = true;
+	this.turretButtons[2].captureClick = true;
+	this.turretButtons[2].xBuildCell = 0;
+	this.turretButtons[2].yBuildCell = 0;
+	this.turretButtons[2].colorFG = "black";
+	this.turretButtons[2].textStyle = '14pt Arial';
+	this.turretButtons[2].click = function(i) {
+		this.turrets.sell(this.activeStack[1].xGrid,this.activeStack[1].yGrid);
+		this.activeStack.splice(-n, n);	// Удаление всего из списка рисования
+	}.bind(this, i);
+
 
 
 
@@ -222,7 +198,9 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	this.mapCover.captureClick = true;
 	this.mapCover.click = function(x, y) {
 		if(whatUnder == 1){
-			this.activeStack.splice(-6, 6);
+			//console.log(this.turrets.check(this.towerButtons[1].xBuildCell, this.towerButtons[1].yBuildCell));
+			console.log(x,y);
+			this.activeStack.splice(-n, n);
 			whatUnder = 0;
 		} else if(whatUnder == 2) {
 			this.activeStack.splice(-(this.towerTypesLength + 3), (this.towerTypesLength + 3));

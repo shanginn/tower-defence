@@ -1,5 +1,7 @@
 td.Player = function() {
 	this.money = 0;
+	this.lvl = 0;
+	this.moneyInterval = 1000;
 	//this.setUI('gameStats')
 };
 

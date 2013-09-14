@@ -84,11 +84,8 @@ td.Turret.prototype.fire = function(enemies, bullets, dt) {
 
 			var thisTurret = enemies[self.target];
 			var dmg = self.damage;
-			function punch () {
-					thisTurret.hp -= dmg;
-				}
 			
-			setTimeout(function() { punch() },bulletTravelTime);
+			setTimeout(function() { thisTurret.hp -= dmg; },bulletTravelTime);
 			bullets.spawn(self.xGrid, self.yGrid, predictedEnemyPosition[0], predictedEnemyPosition[1]);
 			self.cooldownTimer += self.cooldown;
 

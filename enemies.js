@@ -54,17 +54,20 @@ td.Enemies.prototype.spawn = function(enemy) {
 td.Enemies.prototype.update = function(dt, map, ct, player) {
 	// Is it time to spawn the next guy?
 	var waitTimer = Math.floor((this.endTime - ct)/1000);
+	
 	if(waitTimer>0){
-		document.getElementById('nextWaveTimer').style.display = 'block';
+		document.getElementById('untilNextWave').style.display = 'block';
 		document.getElementById('nextWaveTimer').textContent = waitTimer + " с.";
+	} else {
+		document.getElementById('untilNextWave').style.display = 'none';
 	}
-	else document.getElementById('nextWaveTimer').style.display = 'none';
 	if (this.enemyQueue.length > 0 && this.enemyQueue[0].spawnTime <= ct) {
 		this.spawn(this.enemyQueue[0]);
 		this.enemyQueue.splice(0,1);
 	} else if (this.enemyQueue.length == 0 && this.waves.length > 0 && td.Enemies.enemyCount == 0) {
 	// If this wave is over then lets queue up the next wave
 		this.endTime = ct + 5000;
+		player.giveMoney(map.goalHp*2);
 		document.getElementById('untilNextWave').style.display = 'block';
 		document.getElementById('nextWaveTimer').textContent = "5";
 		this.spawnWave(this.waves[0], map);

@@ -24,7 +24,7 @@ td.Map = function() {
 	this.goalHp = 50;
 	gameHP.textContent = this.goalHp;
 	this.waves = [
-		{enemies:	[4, 4, 4, 4, 4]},
+		{enemies:	[2, 2, 2, 1, 1]},
 		{enemies:	[1, 3, 1, 3, 1]},
 		{enemies:	[2, 4, 2, 1, 4]},
 		{enemies:	[1, 3, 1, 3, 1]},
