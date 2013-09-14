@@ -65,10 +65,14 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			this.fireRange.y0 = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize +this.map.gridPixelSize/2;
 			this.fireRange.r = clickedTurret.range * this.game.map.gridPixelSize+2
 			this.fireRange.visible = true;
-			this.fireRange.color = "rgba(1, 1, 1, 0.3)";
+			this.fireRange.color = this.fireRange.r < 6 ?  "rgba(1, 1, 1, 0.3)" : "rgba(0.5, 1, 0.5, 0.3)";
 			this.activeStack.push(this.fireRange);
 			this.turretButtons[0].text = (clickedTurret.lvl + 1 )  + " уровень.";
-			if(clickedTurret.lvl<5) this.turretButtons[1].text = "Улучшить: -" + Math.floor(clickedTurret.cost/2);
+			if(clickedTurret.lvl<5){
+				this.turretButtons[1].color = "#CCDDEE";
+				this.turretButtons[1].captureClick = true;
+				this.turretButtons[1].text = "Улучшить: -" + Math.floor(clickedTurret.cost/2);
+			}
 			else {
 				this.turretButtons[1].text = "Улучшить."
 				this.turretButtons[1].color = "rgba(0 ,0 ,0 ,0.2)";

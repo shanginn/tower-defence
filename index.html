@@ -40,8 +40,8 @@ function pse(){
 	<div role="main" id="game">
 		<div style="position:relative">
 			<canvas id="gameCanvas" width='400'></canvas>
-			<input style="display:none" class="button" type="button" id="resume" value="Resume" onClick="window.fsm.gotoPrevState(); document.getElementById('resume').style.display = 'none'; document.getElementById('restart').style.display = 'none';">
-			<input style="display:none" class="button" type="button" id="restart" value="Restart" onClick="window.location.reload(); document.getElementById('restart').style.display = 'none'; document.getElementById('resume').style.display = 'none';">
+			<input style="display:none" class="button" type="button" id="resume" value="Продолжить" onClick="window.fsm.gotoPrevState(); document.getElementById('resume').style.display = 'none'; document.getElementById('restart').style.display = 'none';">
+			<input style="display:none" class="button" type="button" id="restart" value="Обновить" onClick="window.location.reload(); document.getElementById('restart').style.display = 'none'; document.getElementById('resume').style.display = 'none';">
 
 		</div>
 		<div id="gameStats">
@@ -66,7 +66,7 @@ function pse(){
 				</tr>
 			</table>
 			<div id="pause">
-				<input class="button" type="button" value="Pause" onClick="pse();">
+				<input class="button" type="button" value="Пауза" onClick="pse();">
 			</div>
 		</div>
 	</div>

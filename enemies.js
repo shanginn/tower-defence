@@ -67,7 +67,7 @@ td.Enemies.prototype.update = function(dt, map, ct, player) {
 	} else if (this.enemyQueue.length == 0 && this.waves.length > 0 && td.Enemies.enemyCount == 0) {
 	// If this wave is over then lets queue up the next wave
 		this.endTime = ct + 5000;
-		player.giveMoney(map.goalHp*2);
+		player.giveMoney(map.goalHp*td.Enemies.spawning);
 		document.getElementById('untilNextWave').style.display = 'block';
 		document.getElementById('nextWaveTimer').textContent = "5";
 		this.spawnWave(this.waves[0], map);

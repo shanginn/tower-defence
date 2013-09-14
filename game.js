@@ -38,7 +38,7 @@ td.GameState.prototype.setup = function() {
 	this.turrets.setup(this.player);
 	this.player.giveMoney(6000);
 	user = this.player;
-	setInterval(function(){ user.giveMoney(1);},this.player.moneyInterval);
+	this.moneyIntervalId = setInterval(function(){ user.giveMoney(1);},this.player.moneyInterval);
 	this.enemies.setupWaves(this.map.waves, this.map);
 };
 
@@ -60,7 +60,9 @@ td.GameState.prototype.resume = function(interval) {
 		if (deltaTime >= interval) {
 			ctx.update(interval);
 		}
-	}, 3);	
+	}, 3);
+	user = this.player;
+	this.moneyIntervalId = setInterval(function(){ user.giveMoney(1);},this.player.moneyInterval);	
 };
 
 td.GameState.prototype.exit = function() {
@@ -82,6 +84,7 @@ td.GameState.prototype.play = function(interval) {
 
 td.GameState.prototype.pause = function() {
 	clearInterval(this.timer);
+	clearInterval(this.moneyIntervalId);
 	this.renderer.stopRendering();
 }
 

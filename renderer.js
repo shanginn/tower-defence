@@ -37,7 +37,7 @@ td.Renderer.prototype.startRendering = function() {
 	this.renderTracers();
 	this.renderBullets();
 	this.game.ui.render(this.ctx);
-	
+
 	this.raf = requestAnimFrame(function() {
 		_this.startRendering();
 	}, this.ctx);
@@ -45,6 +45,7 @@ td.Renderer.prototype.startRendering = function() {
 
 td.Renderer.prototype.stopRendering = function() {
 	cancelRequestAnimFrame(this.raf);
+
 };
 td.Renderer.prototype.setCell = function (cellX,cellY,arg) {
 	this.game.map.layout[cellX][cellY] = arg;
@@ -82,19 +83,29 @@ td.Renderer.prototype.renderMap = function() {
 
 td.Renderer.prototype.renderTurrets = function() {
 	var turrets = this.game.turrets.active;
+	function shadeColor(color, percent) {   
+		var num = parseInt(color.substring(1),16),
+		amt = Math.round(2.55 * percent),
+		R = (num >> 16) + amt,
+		B = (num >> 8 & 0x00FF) + amt,
+		G = (num & 0x0000FF) + amt;
+		return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+	}
 	for (var i = 0; i < turrets.length; i++) {
-		var xPixelPos = (turrets[i].xGrid + 0.5) * this.game.map.gridPixelSize;
-		var yPixelPos = (turrets[i].yGrid + 0.5) * this.game.map.gridPixelSize;
-		var color = "#1050FF";
-		var halfSize = 5;
-		for(var i=1;i<turrets[i].lvl+1;i++){
+		if(turrets[i]){
+			var xPixelPos = (turrets[i].xGrid + 0.5) * this.game.map.gridPixelSize;
+			var yPixelPos = (turrets[i].yGrid + 0.5) * this.game.map.gridPixelSize;
+			var color = turrets[i].color;
+			var halfSize = turrets[i].halfSize;
+			var lvl = turrets[i].lvl;
 			this.ctx.beginPath();
-			this.ctx.fillStyle = turrets[i].color;
-			//console.log(turrets[i].halfSize);
-			this.ctx.fillRect(xPixelPos - turrets[i].halfSize, yPixelPos - turrets[i].halfSize, 2 * turrets[i].halfSize, 2 * turrets[i].halfSize);
+			color = shadeColor(color,(lvl)*15);
+			this.ctx.fillStyle = color;
+			this.ctx.fillRect(xPixelPos - halfSize*(1/(i+1)), yPixelPos - halfSize*(1/(i+1)), 2 * halfSize*(1/(i+1)), 2 * halfSize*(1/(i+1)));
+			this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);			
 			this.ctx.fill();
 			this.ctx.closePath();
-		}		
+		}
 	}	
 };
 
@@ -120,8 +131,11 @@ td.Renderer.prototype.renderEnemies = function() {
 		this.ctx.fillStyle = color;
 		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
 
+		this.ctx.fillStyle = "rgba(1,0,0,0.2);";
+		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 5 - halfSize, halfSize*2, 3);
+
 		this.ctx.fillStyle = "#a5260a";
-		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 5 - halfSize, enemies[i].hp/5, 3);
+		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 5 - halfSize, (enemies[i].hp/enemies[i].maxHp)*halfSize*2, 3);
 
 		//this.ctx.fillStyle = "#af4035";
 		//this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 10 - halfSize, enemies[i].hp, 2);

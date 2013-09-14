@@ -41,6 +41,16 @@ td.EnemyTypes = {
 		size: 26,
 		color: "441F0F" ,
 		isFly: true,
-		description: "Average in every way"
+		description: "Flying dude"
+	},
+
+	5: {
+		speed: 0.0001,
+		hp: 500,
+		value: 2000,
+		name: "boss",
+		size: 60,
+		color: "#FF10A0",
+		description: "Босяра"
 	}
 };

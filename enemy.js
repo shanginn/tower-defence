@@ -11,6 +11,7 @@ td.Enemy = function(xGridStart, yGridStart, map, type) {
 	this.cellProgress = 0.0;
 	this.speed = type.speed;
 	this.hp = type.hp;
+	this.maxHp = type.hp;
 	this.value = type.value;
 	this.spawnTime = 0;
 	this.finished = 0;

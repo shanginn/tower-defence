@@ -15,7 +15,7 @@ td.PauseState.prototype.enter = function() {
 	this.ctx.font = '40pt Arial';
 	this.ctx.textAlign = 'center';
 	this.ctx.fillStyle = '#FFFFFF';
-	this.ctx.fillText("Paused", this.ctxWidth / 2, this.ctxHeight / 2);
+	this.ctx.fillText("Пауза", this.ctxWidth / 2, this.ctxHeight / 2);
 	this.setListeners();
 	document.getElementById('restart').style.display = 'block';
 	document.getElementById('resume').style.display = 'block';
@@ -56,7 +56,7 @@ td.Dead.prototype.enter = function() {
 	this.ctx.font = '40pt Arial';
 	this.ctx.textAlign = 'center';
 	this.ctx.fillStyle = '#AA2200';
-	this.ctx.fillText("Fail!", this.ctxWidth / 2, this.ctxHeight / 2);
+	this.ctx.fillText("Поражение!", this.ctxWidth / 2, this.ctxHeight / 2);
 	this.setListeners();
 	document.getElementById('restart').style.display = 'block';
 };
@@ -94,7 +94,7 @@ td.Win.prototype.enter = function() {
 	this.ctx.font = '40pt Arial';
 	this.ctx.textAlign = 'center';
 	this.ctx.fillStyle = '#adff2f';
-	this.ctx.fillText("You win!", this.ctxWidth / 2, this.ctxHeight / 2);
+	this.ctx.fillText("Победа!", this.ctxWidth / 2, this.ctxHeight / 2);
 	this.setListeners();
 	document.getElementById('restart').style.display = 'block';
 };

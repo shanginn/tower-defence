@@ -1,5 +1,5 @@
 td.Turrets = function(map, player) {
-	this.active = [0];
+	this.active = [0,];
 	this.layout = [];
 	this.player = null;
 	var layoutMarker = 0;
@@ -42,8 +42,10 @@ td.Turrets.prototype.spawn = function(xCell, yCell, type) {
 };
 
 td.Turrets.prototype.sell = function (xCell, yCell) {
+	//console.log(this.active,this.layout[yCell][xCell]);
 	this.player.giveMoney(Math.floor(this.active[this.layout[yCell][xCell]].cost/3));
-	this.active[this.layout[yCell][xCell]] = {};
+	//this.active.splice(this.layout[yCell][xCell],1);
+	this.active[this.layout[yCell][xCell]] = 0;
 	this.layout[yCell][xCell]=0;
 }
 
