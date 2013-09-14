@@ -18,6 +18,7 @@ td.PauseState.prototype.enter = function() {
 	this.ctx.fillText("Paused", this.ctxWidth / 2, this.ctxHeight / 2);
 	this.setListeners();
 	document.getElementById('restart').style.display = 'block';
+	document.getElementById('resume').style.display = 'block';
 };
 
 td.PauseState.prototype.exit = function() {
@@ -25,7 +26,8 @@ td.PauseState.prototype.exit = function() {
 };
 
 td.PauseState.prototype.resume = function() {
-	document.getElementById('restart').style.display = 'none';	
+	document.getElementById('restart').style.display = 'none';
+	document.getElementById('resume').style.display = 'none';
 	window.fsm.gotoPrevState();
 };
 

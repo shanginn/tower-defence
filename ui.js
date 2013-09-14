@@ -95,9 +95,12 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			this.fireRange.y0 = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize +this.map.gridPixelSize/2;
 			this.fireRange.r = clickedTurret.range * this.game.map.gridPixelSize+2
 			this.fireRange.visible = true;
-			this.fireRange.color = "rgba(1, 1, 1, 0.5)";
+			this.fireRange.color = "rgba(1, 1, 1, 0.3)";
 			this.activeStack.push(this.fireRange);
-			for (var i = 0; i < 2; i++) {
+			this.turretButtons[2].text = "Продать: +" + Math.floor(clickedTurret.cost/3);
+			this.turretButtons[1].text = "Улучшить: -" + Math.floor(clickedTurret.cost/2);
+			this.turretButtons[0].text = (clickedTurret.lvl + 1 )  + " уровень.";
+			for (var i = 0; i < 3; i++) {
 				this.turretButtons[i].x0 = xPos + 25;
 				this.turretButtons[i].y0 = yPos + i * 30 ;
 				this.turretButtons[i].x1 = this.turretButtons[i].x0 + this.turretButtons[i].w;
@@ -141,7 +144,7 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 		this.towerButtons[i].type = Object.keys(this.towerTypes)[i];
 		this.towerButtons[i].xBuildCell = 0;
 		this.towerButtons[i].yBuildCell = 0;
-		this.towerButtons[i].text = this.towerTypes[this.towerButtons[i].type].name;
+		this.towerButtons[i].text = this.towerTypes[this.towerButtons[i].type].name + ": " + this.towerTypes[this.towerButtons[i].type].cost;
 		this.towerButtons[i].colorFG = "black";
 		this.towerButtons[i].textStyle = '14pt Arial';
 		this.towerButtons[i].click = function(i) {
@@ -150,24 +153,38 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			//this.activeStack.pop(); // - Нажатая клетка		
 		}.bind(this, i);
 	}
-
-	//Кнопка продажи
-	this.turretButtons = [{},{}];
+	this.turretButtons = [{},{},{}];
+	//Текст туррельки
 	this.turretButtons[0].x0 = 0;
 	this.turretButtons[0].x1 = 0;
 	this.turretButtons[0].y0 = 0;
 	this.turretButtons[0].y1 = 0;
 	this.turretButtons[0].w = wt;
 	this.turretButtons[0].h = ht;
-	this.turretButtons[0].color = "#CCDDEE";
+	this.turretButtons[0].color = "rgba(1 ,1 ,1 ,0,2)";
 	this.turretButtons[0].visible = true;
-	this.turretButtons[0].captureClick = true;
+	//this.turretButtons[0].captureClick = true;
 	this.turretButtons[0].xBuildCell = 0;
 	this.turretButtons[0].yBuildCell = 0;
-	this.turretButtons[0].text = "Продать";
 	this.turretButtons[0].colorFG = "black";
 	this.turretButtons[0].textStyle = '14pt Arial';
-	this.turretButtons[0].click = function(i) {
+
+	//Кнопка продажи
+
+	this.turretButtons[2].x0 = 0;
+	this.turretButtons[2].x1 = 0;
+	this.turretButtons[2].y0 = 0;
+	this.turretButtons[2].y1 = 0;
+	this.turretButtons[2].w = wt;
+	this.turretButtons[2].h = ht;
+	this.turretButtons[2].color = "#CCDDEE";
+	this.turretButtons[2].visible = true;
+	this.turretButtons[2].captureClick = true;
+	this.turretButtons[2].xBuildCell = 0;
+	this.turretButtons[2].yBuildCell = 0;
+	this.turretButtons[2].colorFG = "black";
+	this.turretButtons[2].textStyle = '14pt Arial';
+	this.turretButtons[2].click = function(i) {
 		this.turrets.sell(this.activeStack[1].xGrid,this.activeStack[1].yGrid);
 		this.activeStack.splice(-6, 6);	// Удаление всего из списка рисования
 	}.bind(this, i);
@@ -184,7 +201,6 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	this.turretButtons[1].captureClick = true;
 	this.turretButtons[1].xBuildCell = 0;
 	this.turretButtons[1].yBuildCell = 0;
-	this.turretButtons[1].text = "Улучшить";
 	this.turretButtons[1].colorFG = "black";
 	this.turretButtons[1].textStyle = '14pt Arial';
 	this.turretButtons[1].click = function(i) {
@@ -220,7 +236,7 @@ td.UI.prototype.render = function(ctx) {
 	this.ctx = ctx;
 	
 	for (i in this.activeStack) {
-		if (this.activeStack[i].visible) {
+		if (typeof this.activeStack[i] != 'undefined' && this.activeStack[i].visible) {
 			if(this.activeStack[i].isRound){
 				this.ctx.beginPath();
 				this.ctx.fillStyle = this.activeStack[i].color;

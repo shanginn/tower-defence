@@ -8,23 +8,11 @@ td.TurretTypes = {
 		cooldown: 400.0,
 		damage: 1,
 		cost: 100,
-		name: "gun",
+		name: "Лучник",
 		color: "#376DFF",
 		halfSize: 7
 	},
 
-	// long range artillery
-	"art": {
-		lvl: 0,
-		id: 2,
-		range: 6.0,
-		cooldown: 2000.0,
-		damage: 10,
-		cost: 500,
-		name: "artillery",
-		color: "#002999",
-		halfSize: 12
-	},
 	
 	// hmg
 	"hmg": {
@@ -34,8 +22,23 @@ td.TurretTypes = {
 		cooldown: 500.0,
 		damage: 5,
 		cost: 300,
-		name: "heavy mg",
+		name: "Катапульта",
 		color: "#003EE8",
 		halfSize: 9
+	},
+
+
+	// long range artillery
+	"art": {
+		lvl: 0,
+		id: 2,
+		range: 6.0,
+		cooldown: 2000.0,
+		damage: 10,
+		cost: 500,
+		name: "Магия",
+		color: "#002999",
+		halfSize: 12
 	}
+
 };

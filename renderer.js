@@ -98,6 +98,7 @@ td.Renderer.prototype.renderTurrets = function() {
 
 td.Renderer.prototype.renderEnemies = function() {
 	var enemies = this.game.enemies.active;
+	
 	for (var i = 0; i < enemies.length; i++) {
 		if (enemies[i].finished === 1) {
 			continue;
@@ -106,27 +107,20 @@ td.Renderer.prototype.renderEnemies = function() {
 			enemies[i].cellProgress) + 0.5) * this.game.map.gridPixelSize;
 		var yPixelPos = ((enemies[i].yGrid + (enemies[i].yGridNext - enemies[i].yGrid) *
 			enemies[i].cellProgress) + 0.5) * this.game.map.gridPixelSize;
-		var color = "#FF5010";
-		var halfSize = 5;
-		switch (enemies[i].name) {
-			case "scout":
-				color = "#FF5010";
-				halfSize = 4;
-				break;
-			case "heavy":
-				color = "#721F00";
-				halfSize = 7;
-				break;
-			case "soldier":
-				color = "#C13400";
-				halfSize = 5;
-				break;
+		var color = enemies[i].color;
+		var halfSize = enemies[i].size/5;
+		
+		if(enemies[i].isFly){
+			this.ctx.fillStyle = "rgba(0, 1, 1, 0.15)";
+			this.ctx.fillRect(xPixelPos - halfSize - 5, yPixelPos - halfSize + 5, 2 * halfSize, 2 * halfSize);	
 		}
+
 		this.ctx.fillStyle = color;
 		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
 
 		this.ctx.fillStyle = "#a5260a";
 		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 5 - halfSize, enemies[i].hp/5, 3);
+
 		//this.ctx.fillStyle = "#af4035";
 		//this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 10 - halfSize, enemies[i].hp, 2);
 

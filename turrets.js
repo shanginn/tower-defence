@@ -42,14 +42,14 @@ td.Turrets.prototype.spawn = function(xCell, yCell, type) {
 };
 
 td.Turrets.prototype.sell = function (xCell, yCell) {
-	this.player.giveMoney(Math.floor(this.active[this.layout[yCell][xCell]].cost/2));
+	this.player.giveMoney(Math.floor(this.active[this.layout[yCell][xCell]].cost/3));
 	this.active[this.layout[yCell][xCell]] = {};
 	this.layout[yCell][xCell]=0;
 }
 
 td.Turrets.prototype.upgrade = function (xCell, yCell) {
-	if(this.player.money<this.active[this.layout[yCell][xCell]].cost/2 || this.active[this.layout[yCell][xCell]].lvl>5){
-		console.log(this.player.money,this.active[this.layout[yCell][xCell]].cost);
+	if(this.player.money<this.active[this.layout[yCell][xCell]].cost/2 || this.active[this.layout[yCell][xCell]].lvl>=5){
+		//console.log(this.player.money,this.active[this.layout[yCell][xCell]].cost);
 		return;
 	} else {
 		this.active[this.layout[yCell][xCell]].lvl++;

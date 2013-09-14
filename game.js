@@ -36,7 +36,7 @@ td.GameState.prototype.setup = function() {
 	this.player = new td.Player();
 	this.ui.setup(this.turrets, this.towerTypes, this.player, this.map, this);
 	this.turrets.setup(this.player);
-	this.player.giveMoney(600);
+	this.player.giveMoney(6000);
 	this.enemies.setupWaves(this.map.waves, this.map);
 };
 

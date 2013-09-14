@@ -40,13 +40,30 @@ function pse(){
 	<div role="main" id="game">
 		<div style="position:relative">
 			<canvas id="gameCanvas" width='400'></canvas>
-			<input style="display:none" class="button" type="button" id="restart" value="Restart" onClick="window.location.reload(); document.getElementById('restart').style.display = 'none';">
+			<input style="display:none" class="button" type="button" id="resume" value="Resume" onClick="window.fsm.gotoPrevState(); document.getElementById('resume').style.display = 'none'; document.getElementById('restart').style.display = 'none';">
+			<input style="display:none" class="button" type="button" id="restart" value="Restart" onClick="window.location.reload(); document.getElementById('restart').style.display = 'none'; document.getElementById('resume').style.display = 'none';">
+
 		</div>
 		<div id="gameStats">
 			<table>
-				<tr><div id="gameMoney" class="gameValues">0</div></tr>
-				<tr><div id="gameWave" class="gameValues">0</div></tr>
-				<tr><div id="gameHP" class="gameValues">0</div></tr>
+				<tr>
+					<td><div class="gameValuesText">Золото: </div></td>
+					<td><div id="gameMoney" class="gameValues">0</div></td>
+				</tr>
+				<tr>
+					<td><div class="gameValuesText">Волна: </div></td>
+					<td><div id="gameWave" class="gameValues">0</div></td>
+				</tr>
+				<tr>
+					<td><div class="gameValuesText">Здоровье: </div></td>
+					<td><div id="gameHP" class="gameValues">0</div></td>
+				</tr>
+				<tr>
+					<div id="untilNextWave" style="display:none">
+						<td><div class="gameValuesText">До волны: </div></td>
+						<td><div id="nextWaveTimer" class="gameValues">0</div></td>
+					</div>
+				</tr>
 			</table>
 			<div id="pause">
 				<input class="button" type="button" value="Pause" onClick="pse();">
