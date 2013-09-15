@@ -46,7 +46,7 @@ td.EnemyTypes = {
 
 	5: {
 		speed: 0.0007,
-		hp: 1500,
+		hp: 3000,
 		value: 5000,
 		name: "boss",
 		size: 60,

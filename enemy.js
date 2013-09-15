@@ -9,7 +9,7 @@ td.Enemy = function(xGridStart, yGridStart, map, type) {
 		return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
 	}	
 	// Currently moving between (xGrid, yGrid) and (xGridNext, yGridNext)
-	this.lvlCoof = td.Enemies.spawning*1.3;
+	this.lvlCoof = td.Enemies.spawning*1.8;
 	this.xGrid = xGridStart;
 	this.yGrid = yGridStart;
 	this.route = [];
@@ -22,8 +22,7 @@ td.Enemy = function(xGridStart, yGridStart, map, type) {
 	this.speed = type.speed + this.lvlCoof/6000;
 	this.hp = type.hp + this.lvlCoof*5;
 	this.maxHp = type.hp + this.lvlCoof*5;
-	this.value = type.value + this.lvlCoof*20;
-	console.log(this);
+	this.value = type.value + this.lvlCoof*10;
 	this.spawnTime = 0;
 	this.finished = 0;
 	this.name = type.name;

@@ -26,6 +26,7 @@ td.Turrets.prototype.spawn = function(xCell, yCell, type) {
 	}
 	this.player.giveMoney(-td.TurretTypes[type].cost);
 	var newTurret = new td.Turret(xCell, yCell, type);
+	
 	//this.layout[yCell][xCell] = td.TurretTypes[type].id;
 
 	// If there's an unused turret in the array then use that space
