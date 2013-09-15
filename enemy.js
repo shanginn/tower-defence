@@ -1,5 +1,15 @@
 td.Enemy = function(xGridStart, yGridStart, map, type) {
+	
+	function shadeColor(color, percent) {   
+		var num = parseInt(color.substring(1),16),
+		amt = Math.round(2.55 * percent),
+		R = (num >> 16) + amt,
+		B = (num >> 8 & 0x00FF) + amt,
+		G = (num & 0x0000FF) + amt;
+		return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+	}	
 	// Currently moving between (xGrid, yGrid) and (xGridNext, yGridNext)
+	this.lvlCoof = td.Enemies.spawning*1.3;
 	this.xGrid = xGridStart;
 	this.yGrid = yGridStart;
 	this.route = [];
@@ -9,14 +19,15 @@ td.Enemy = function(xGridStart, yGridStart, map, type) {
 	this.yGridNext = this.route[this.routeProgress][1];
 	// Fraction of the way from last current grid cell to next cell
 	this.cellProgress = 0.0;
-	this.speed = type.speed;
-	this.hp = type.hp;
-	this.maxHp = type.hp;
-	this.value = type.value;
+	this.speed = type.speed + this.lvlCoof/6000;
+	this.hp = type.hp + this.lvlCoof*5;
+	this.maxHp = type.hp + this.lvlCoof*5;
+	this.value = type.value + this.lvlCoof*20;
+	console.log(this);
 	this.spawnTime = 0;
 	this.finished = 0;
 	this.name = type.name;
-	this.color = type.color;
+	this.color = shadeColor(type.color,td.Enemies.spawning*5);
 	this.size = type.size;
 	this.isFly = type.isFly;
 };
@@ -148,7 +159,7 @@ td.Enemy.prototype.update = function(dt, map, player) {
 		// Have we made it to the goal - if so the goal takes damage equal to
 		// our remaining hp
 		if (map.layout[this.yGridNext][this.xGridNext] === 2) {
-			map.goalHp -= this.hp;
+			map.goalHp = Math.floor( map.goalHp - this.hp );
 			if(map.goalHp<=0){
 				map.goalHp=0;
 				window.fsm.changeState(window.dead);

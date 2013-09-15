@@ -18,7 +18,7 @@ td.EnemyTypes = {
 		value: 100,
 		name: "heavy",
 		size: 35,
-		color: "721F00" ,
+		color: "#721F00" ,
 		description: "Slow, but knows how to take a punch"
 	},
 	
@@ -29,7 +29,7 @@ td.EnemyTypes = {
 		value: 50,
 		name: "soldier",
 		size: 25,
-		color: "C13400" ,
+		color: "#C13400" ,
 		description: "Average in every way"
 	},
 
@@ -39,15 +39,15 @@ td.EnemyTypes = {
 		value: 150,
 		name: "bird",
 		size: 26,
-		color: "441F0F" ,
+		color: "#441F0F" ,
 		isFly: true,
 		description: "Flying dude"
 	},
 
 	5: {
-		speed: 0.0001,
-		hp: 500,
-		value: 2000,
+		speed: 0.0007,
+		hp: 1500,
+		value: 5000,
 		name: "boss",
 		size: 60,
 		color: "#FF10A0",
