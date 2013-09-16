@@ -9,6 +9,7 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	this.towerTypesLength = Object.keys(this.towerTypes).length;
 	this.map = map;
 	this.game = game;
+	this.enemies = game.enemies;
 
 	
 	// Map
@@ -219,6 +220,9 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	this.mapCover.captureClick = true;
 	this.mapCover.click = function(x, y) {
 		if(whatUnder == 1){
+			clickedEnemy = this.enemies.check(x,y);
+			if(typeof clickedEnemy != 'undefined')
+				this.activeStack[1].target = this.enemies.check(x,y);
 			removeDraw(n-1);
 			whatUnder = 0;
 		} else if(whatUnder == 2) {

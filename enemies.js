@@ -12,6 +12,25 @@ td.Enemies = function(enemyTypes) {
 	td.Enemies.spawning = 0;
 
 };
+td.Enemies.prototype.check = function(x,y) {
+	//Лежит ли точка в квадрате?
+	function checkInRect (xp,yp,fullSize,ex,ey) {
+		size = fullSize/2.5 + 2;
+		this.x1 = ex + size;
+		this.y1 = ey + size;
+		this.x2 = ex - size;
+		this.y2 = ey - size;
+		if(xp > this.x2 && xp < this.x1 && yp > this.y2 && yp < this.y1){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	for(i in this.active){
+		if(checkInRect(x,y,this.active[i].size,this.active[i].x,this.active[i].y))
+			return i;
+	}
+};
 
 td.Enemies.prototype.setupWaves = function(waves, map) {
 	this.waves = waves;
@@ -54,12 +73,12 @@ td.Enemies.prototype.spawn = function(enemy) {
 td.Enemies.prototype.update = function(dt, map, ct, player) {
 	// Is it time to spawn the next guy?
 	var waitTimer = Math.floor((this.endTime - ct)/1000);
-	
+	console.log(waitTimer);
 	if(waitTimer>=0){
 		document.getElementById('untilNextWave').style.display = 'block';
 		document.getElementById('nextWaveTimer').textContent = waitTimer + " с.";
 	} else {
-		document.getElementById('untilNextWave').style.display = 'none';
+		document.getElementById('nextWaveTimer').style.display = 'none';
 	}
 	if (this.enemyQueue.length > 0 && this.enemyQueue[0].spawnTime <= ct) {
 		this.spawn(this.enemyQueue[0]);

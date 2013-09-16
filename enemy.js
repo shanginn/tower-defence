@@ -19,6 +19,8 @@ td.Enemy = function(xGridStart, yGridStart, map, type) {
 	this.yGridNext = this.route[this.routeProgress][1];
 	// Fraction of the way from last current grid cell to next cell
 	this.cellProgress = 0.0;
+	this.x = 0.0;
+	this.y = 0.0;
 	this.speed = type.speed + this.lvlCoof/6000;
 	this.hp = type.hp + this.lvlCoof*5;
 	this.maxHp = type.hp + this.lvlCoof*5;
@@ -150,8 +152,12 @@ td.Enemy.prototype.update = function(dt, map, player) {
 	if (this.finished === 1) {
 		return;
 	}
-	
 	this.cellProgress += this.speed * dt;
+	this.x = ((this.xGrid + (this.xGridNext - this.xGrid) *
+			this.cellProgress) + 0.5) * map.gridPixelSize;
+	this.y = ((this.yGrid + (this.yGridNext - this.yGrid) *
+			this.cellProgress) + 0.5) * map.gridPixelSize;	
+	//console.log(this.x,this.y);
 	// If we reach the next cell, i.e. progress > 1.0, then work out where
 	// we need to go next and make the remaining progress in that direction.
 	if (this.cellProgress > 1.0) {
