@@ -50,17 +50,16 @@ td.Turrets.prototype.sell = function (xCell, yCell) {
 	this.layout[yCell][xCell]=0;
 }
 
-td.Turrets.prototype.upgrade = function (xCell, yCell) {
-	if(this.player.money<this.active[this.layout[yCell][xCell]].cost/2 || this.active[this.layout[yCell][xCell]].lvl>=5){
-		//console.log(this.player.money,this.active[this.layout[yCell][xCell]].cost);
+td.Turrets.prototype.upgrade = function (turret) {
+	if(this.player.money<turret.cost/2 || turret.lvl>=5){
 		return;
 	} else {
-		this.active[this.layout[yCell][xCell]].lvl++;
-		this.player.giveMoney(-Math.floor(this.active[this.layout[yCell][xCell]].cost/2));
-		this.active[this.layout[yCell][xCell]].cost += Math.floor(this.active[this.layout[yCell][xCell]].lvl * this.active[this.layout[yCell][xCell]].cost/2);
-		this.active[this.layout[yCell][xCell]].damage *= 1.2;
-		this.active[this.layout[yCell][xCell]].range *= 1.2;
-		this.active[this.layout[yCell][xCell]].cooldown /= 1.2;
+		turret.lvl++;
+		this.player.giveMoney(-Math.floor(turret.cost/2));
+		turret.cost += Math.floor(turret.lvl * turret.cost/2);
+		turret.damage *= 1.2;
+		turret.range *= 1.2;
+		turret.cooldown /= 1.2;
 	}
 }
 

@@ -73,7 +73,6 @@ td.Enemies.prototype.spawn = function(enemy) {
 td.Enemies.prototype.update = function(dt, map, ct, player) {
 	// Is it time to spawn the next guy?
 	var waitTimer = Math.floor((this.endTime - ct)/1000);
-	console.log(waitTimer);
 	if(waitTimer>=0){
 		document.getElementById('untilNextWave').style.display = 'block';
 		document.getElementById('nextWaveTimer').textContent = waitTimer + " с.";

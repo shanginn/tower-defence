@@ -61,22 +61,11 @@ td.Renderer.prototype.renderMap = function() {
 				this.ctx.fillStyle = '#CCCCCC';
 			} else if (mapLayout[y][x] === 2) {
 				this.ctx.fillStyle = '#FF8866';
-			}/* else if (mapLayout[y][x] === 3) {
-				this.ctx.fillStyle = "rgba(0.7, 0.1, 0.3, 0.2)";;
-			}*/
+			}
 			var xGrid = x * this.game.map.gridPixelSize;
 			var yGrid = y * this.game.map.gridPixelSize;
 			this.ctx.fillRect(xGrid+1, yGrid+1, this.game.map.gridPixelSize-1,
 				this.game.map.gridPixelSize-1);
-/* хп на последней клетке
-			if (mapLayout[y][x] === 2) {
-				this.ctx.font = '10pt Arial';
-				this.ctx.textAlign = 'center';
-				this.ctx.fillStyle = '#111111';
-				this.ctx.fillText(this.game.map.goalHp, xGrid + this.game.map.gridPixelSize / 2,
-					yGrid + this.game.map.gridPixelSize / 2 + 5);
-			}
-*/			
 		}
 	}
 };
@@ -136,9 +125,6 @@ td.Renderer.prototype.renderEnemies = function() {
 
 		this.ctx.fillStyle = "#a5260a";
 		this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 5 - halfSize, (enemies[i].hp/enemies[i].maxHp)*halfSize*2, 3);
-
-		//this.ctx.fillStyle = "#af4035";
-		//this.ctx.fillRect(xPixelPos - halfSize, yPixelPos - 10 - halfSize, enemies[i].hp, 2);
 
 	}
 };

@@ -77,6 +77,7 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			addToDraw(this.fireRange);
 			this.turretButtons[0].text = (clickedTurret.lvl + 1 )  + " уровень.";
 			this.turretButtons[1].cost = Math.floor(clickedTurret.cost/2);
+			this.turretButtons[1].hovered = false;
 			if(clickedTurret.lvl < 5 && this.player.money > Math.floor(clickedTurret.cost/2)){
 				this.turretButtons[1].color = "#CCDDEE";
 				this.turretButtons[1].captureClick = true;
@@ -104,6 +105,7 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			whatUnder = 2;
 			// Добавление меню с выбором турелей к списку рисования
 			for (var i = 0; i < this.towerButtons.length; i++) {
+				this.towerButtons[i].hovered = false;
 				this.towerButtons[i].x0 = xPos + 25;
 				this.towerButtons[i].y0 = yPos + i * 30 ;
 				this.towerButtons[i].x1 = this.towerButtons[i].x0 + this.towerButtons[i].w;
@@ -128,8 +130,8 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	  }
 	}
 	var addButton = polymorph (
-		function (whereAdd,x0,x1,y0,y1,w,h,color,visible,captureClick,cost,type,xBuildCell,yBuildCell,text,colorFG,textStyle,clickFun) {
-			//Башенная кнопка
+		function (whereAdd,x0,x1,y0,y1,w,h,color,visible,captureClick,mouseOver,cost,type,xBuildCell,yBuildCell,text,colorFG,textStyle,clickFun,mouseOverFun,mouseOutOverFun) {
+			//Кнопка добавления башни
 			var btn = {};
 			btn.x0 				= x0; 		
 			btn.x1 				= x1; 		
@@ -140,6 +142,7 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			btn.color 			= color; 		
 			btn.visible 		= visible; 	
 			btn.captureClick 	= captureClick;
+			btn.mouseOver 		= mouseOver;
 			btn.cost 			= cost;
 			btn.type 			= type; 		
 			btn.xBuildCell 		= xBuildCell; 
@@ -148,10 +151,13 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			btn.colorFG 		= colorFG;	
 			btn.textStyle 		= textStyle; 	
 			btn.click 			= clickFun;
+			btn.mouseOverFun 	= mouseOverFun;
+			btn.mouseOutOverFun = mouseOutOverFun;
+			btn.hovered			= false;
 			whereAdd.push(btn);
 		},
 		//Кнопки турелей
-		function (whereAdd,x0,x1,y0,y1,w,h,color,visible,captureClick,xBuildCell,yBuildCell,colorFG,textStyle,clickFun) {
+		function (whereAdd,x0,x1,y0,y1,w,h,color,visible,captureClick,mouseOver,xBuildCell,yBuildCell,colorFG,textStyle,clickFun,mouseOverFun,mouseOutOverFun) {
 			var btn = {};
 			btn.x0 				= x0; 		
 			btn.x1 				= x1; 		
@@ -161,13 +167,16 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 			btn.h 				= h; 			
 			btn.color 			= color; 		
 			btn.visible 		= visible; 	
-			btn.captureClick 	= captureClick;	
+			btn.captureClick 	= captureClick;
+			btn.mouseOver 		= mouseOver;	
 			btn.xBuildCell 		= xBuildCell; 
-			btn.yBuildCell 		= yBuildCell; 
-			//btn.text 			= text; 		
+			btn.yBuildCell 		= yBuildCell; 	
 			btn.colorFG 		= colorFG;	
 			btn.textStyle 		= textStyle; 	
 			btn.click 			= clickFun;
+			btn.mouseOverFun 	= mouseOverFun;
+			btn.mouseOutOverFun = mouseOutOverFun;
+			btn.hovered			= false;
 			whereAdd.push(btn);
 		}
 	)
@@ -178,32 +187,61 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 		this.type = Object.keys(this.towerTypes)[i];
 		this.cost = this.towerTypes[this.type].cost
 		this.text = this.towerTypes[this.type].name + ": " + this.cost;
-		addButton(this.towerButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,this.cost,this.type,0,0, this.text, "black",'14pt Arial',
+		addButton(this.towerButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,true,this.cost,this.type,0,0, this.text, "black",'14pt Arial',
 			function(i) {
 				this.turrets.spawn(this.towerButtons[i].xBuildCell, this.towerButtons[i].yBuildCell, this.towerButtons[i].type);
 				removeDraw(n-1);
-			}.bind(this, i)
+			}.bind(this, i),
+			function(i,x,y){
+				this.fireRange = {};
+				this.fireRange.isRound = true;
+				this.fireRange.x0 = x;
+				this.fireRange.y0 = y;
+				this.fireRange.r = this.towerTypes[this.towerButtons[i].type].range * this.game.map.gridPixelSize+2;
+				this.fireRange.visible = true;
+				this.fireRange.color = this.towerTypes[this.towerButtons[i].type].range < 6 ?  "rgba(20, 25, 25, 0.2)" : "gradient";
+				addToDraw(this.fireRange);
+			}.bind(this,i),
+			function(){
+				removeDraw(1);
+			}
 		);
 	}
 	this.turretButtons = [];
 	//Текст туррельки
-	addButton(this.turretButtons,0,0,0,0,wt,ht,"rgba(1 ,1 ,1 ,0.2)",true,false,0,0,"black",'14pt Arial',NaN);	
+	addButton(this.turretButtons,0,0,0,0,wt,ht,"rgba(1 ,1 ,1 ,0.2)",true,false,false,0,0,"black",'14pt Arial',NaN,NaN,NaN);	
 		
 	//Кнопка апгрейда
-	addButton(this.turretButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,0,0,"black",'14pt Arial',
+	addButton(this.turretButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,true,0,0,"black",'14pt Arial',
 		function(i) {
-			this.turrets.upgrade(this.activeStack[1].xGrid,this.activeStack[1].yGrid);
+			this.turrets.upgrade(this.turrets.check(this.activeStack[1].xGrid,this.activeStack[1].yGrid));
 			removeDraw(n-1);
-		}.bind(this, i)
+		}.bind(this, i),
+		function(i,x,y){
+			this.activeStack[4].visible = false;
+			this.turret = this.turrets.check(this.activeStack[1].xGrid,this.activeStack[1].yGrid);
+			this.fireRange = {};
+			this.fireRange.isRound = true;
+			this.fireRange.x0 = x;
+			this.fireRange.y0 = y;
+			this.fireRange.r = (this.turret.range * this.game.map.gridPixelSize+2)*1.2;
+			this.fireRange.visible = true;
+			this.fireRange.color = this.turret.range*1.2 < 6 ?  "rgba(20, 25, 25, 0.2)" : "gradient";
+			addToDraw(this.fireRange);
+		}.bind(this,i),
+		function(){
+			this.activeStack[4].visible = true;			
+			removeDraw(1);
+		}.bind(this)		
 	);	
 
 	//Кнопка продажи
-	addButton(this.turretButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,0,0,"black",'14pt Arial',
+	addButton(this.turretButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,false,0,0,"black",'14pt Arial',
 		function(i) {
 			this.turrets.sell(this.activeStack[1].xGrid,this.activeStack[1].yGrid);
 			removeDraw(n-1);
-		}.bind(this, i)
-	);
+		}.bind(this, i),
+		NaN,NaN);
 
 
 
@@ -237,10 +275,25 @@ td.UI.prototype.render = function(ctx) {
 	this.ctx = ctx;
 	for (i in this.activeStack) {
 		if (typeof this.activeStack[i] != 'undefined' && this.activeStack[i].visible) {
+			
+			//Мышка наведена на кнопку башни? Рисуем предполагаемый радиус
+			var inBtn = this.activeStack[i].mouseOver && this.game.mouseX > this.activeStack[i].x0 && this.game.mouseX < this.activeStack[i].x0 + this.activeStack[i].w &&
+			   this.game.mouseY > this.activeStack[i].y0 && this.game.mouseY < this.activeStack[i].y0 + this.activeStack[i].h;
+			if(this.activeStack[i].hovered && !inBtn){
+				console.log('deleted', this.activeStack[i]);
+				this.activeStack[i].hovered = false;
+				this.activeStack[i].mouseOutOverFun();
+
+			} else if( inBtn && this.activeStack[i].hasOwnProperty("text") && !this.activeStack[i].hovered ){
+				this.activeStack[i].hovered = true;
+				this.activeStack[i].mouseOverFun(Math.floor((this.activeStack[3].x0+this.activeStack[3].x1)/2),Math.floor((this.activeStack[3].y0+this.activeStack[3].y1)/2));
+			}
+
 			if(this.activeStack[i].isRound){
 				// Если пушка может бить воздушные цели, делаем ей градиентный радиус
 				if(this.activeStack[i].color == "gradient"){
-					var grd = this.ctx.createRadialGradient(this.activeStack[i].x0,this.activeStack[i].y0,this.activeStack[i].r/5,this.activeStack[i].x0,this.activeStack[i].y0,this.activeStack[i].r);
+					var grd = this.ctx.createRadialGradient(this.activeStack[i].x0,this.activeStack[i].y0,this.activeStack[i].r/5,
+						this.activeStack[i].x0,this.activeStack[i].y0,this.activeStack[i].r);
 					grd.addColorStop(0, "rgba(255,255,255,0.2)");
 					grd.addColorStop(1, "rgba(0,0,0,0.2)");
 					this.ctx.fillStyle = grd;
@@ -249,7 +302,12 @@ td.UI.prototype.render = function(ctx) {
 				this.ctx.arc(this.activeStack[i].x0, this.activeStack[i].y0, this.activeStack[i].r, 0, (Math.PI/180)*360, true);
 				this.ctx.closePath();
 				this.ctx.fill();
-			}else{
+			} else {
+				if(this.activeStack[i].hovered){
+					this.ctx.strokeStyle = "rgba(0,200,10,0.8)"
+					this.ctx.lineWidth = 3;
+					this.ctx.strokeRect(this.activeStack[i].x0, this.activeStack[i].y0, this.activeStack[i].w, this.activeStack[i].h);
+				}
 				this.ctx.fillStyle = this.activeStack[i].color;
 				this.ctx.fillRect(this.activeStack[i].x0, this.activeStack[i].y0, this.activeStack[i].w, this.activeStack[i].h);
 				if (this.activeStack[i].hasOwnProperty("text")) {
