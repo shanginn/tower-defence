@@ -21,7 +21,6 @@ td.GameState = function(canvas) {
 		self.mouseY = e.offsetY;
 	},false);
 
-	console.log(this.mouseX, this.mouseY);
 	this.renderer = new td.Renderer(this.canvas, this);
 	this.ui = new td.UI();
 	this.emitter = new td.Emitter();
@@ -43,7 +42,7 @@ td.GameState.prototype.setup = function() {
 	this.player = new td.Player();
 	this.ui.setup(this.turrets, this.towerTypes, this.player, this.map, this);
 	this.turrets.setup(this.player);
-	this.player.giveMoney(600);
+	this.player.giveMoney(60000);
 	user = this.player;
 	this.moneyIntervalId = setInterval(function(){ user.giveMoney(1);},this.player.moneyInterval);
 	this.enemies.setupWaves(this.map.waves, this.map);

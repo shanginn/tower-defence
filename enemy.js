@@ -145,6 +145,7 @@ td.Enemy.prototype.update = function(dt, map, player) {
 	if (this.hp <= 0) {
 		this.finished = 1;
 		player.giveMoney(this.value);
+		player.giveExp(this.value);
 		td.Enemies.enemyCount--;
 		//console.log(td.Enemies.enemyCount);
 	}

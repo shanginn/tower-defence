@@ -29,6 +29,7 @@ td.Renderer = function(canvas, game) {
 
 td.Renderer.prototype.startRendering = function() {
 	var _this = this;
+	var Range;
 	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	
 	this.renderMap();
@@ -98,7 +99,7 @@ td.Renderer.prototype.renderTurrets = function() {
 	}	
 };
 
-td.Renderer.prototype.renderEnemies = function() {
+td.Renderer.prototype.renderEnemies = function(isRange) {
 	var enemies = this.game.enemies.active;
 	
 	for (var i = 0; i < enemies.length; i++) {
@@ -115,6 +116,18 @@ td.Renderer.prototype.renderEnemies = function() {
 		if(enemies[i].isFly){
 			this.ctx.fillStyle = "rgba(0, 1, 1, 0.15)";
 			this.ctx.fillRect(xPixelPos - halfSize - 5, yPixelPos - halfSize + 5, 2 * halfSize, 2 * halfSize);	
+		}
+
+		var atEnemy = this.game.mouseX > xPixelPos - halfSize && this.game.mouseX < xPixelPos + halfSize &&
+			this.game.mouseY > yPixelPos - halfSize && this.game.mouseY < yPixelPos + halfSize;
+		if( typeof td.Renderer.range != 'undefined' )
+			var	inCircle = (xPixelPos - td.Renderer.range.x0)*(xPixelPos - td.Renderer.range.x0) +
+				(yPixelPos - td.Renderer.range.y0)*(yPixelPos - td.Renderer.range.y0) < td.Renderer.range.r*td.Renderer.range.r;
+		if(atEnemy && inCircle){
+			//Обводка противника под мышкой
+			this.ctx.strokeStyle = "rgba(200,0,10,0.4)"
+			this.ctx.lineWidth = 2;
+			this.ctx.strokeRect(xPixelPos - halfSize, yPixelPos - halfSize, 2 * halfSize, 2 * halfSize);
 		}
 
 		this.ctx.fillStyle = color;

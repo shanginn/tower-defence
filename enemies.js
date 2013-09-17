@@ -26,7 +26,7 @@ td.Enemies.prototype.check = function(x,y) {
 			return false;
 		}
 	}
-	for(i in this.active){
+	for(var i = this.active.length - 1; i!=0 ; i--){
 		if(checkInRect(x,y,this.active[i].size,this.active[i].x,this.active[i].y))
 			return i;
 	}
@@ -74,10 +74,12 @@ td.Enemies.prototype.update = function(dt, map, ct, player) {
 	// Is it time to spawn the next guy?
 	var waitTimer = Math.floor((this.endTime - ct)/1000);
 	if(waitTimer>=0){
-		document.getElementById('untilNextWave').style.display = 'block';
-		document.getElementById('nextWaveTimer').textContent = waitTimer + " с.";
+		nextWaveTimer.style.display = 'block';
+		untilNextWave.style.display = 'block';
+		nextWaveTimer.textContent = waitTimer + " с.";
 	} else {
-		document.getElementById('nextWaveTimer').style.display = 'none';
+		untilNextWave.style.display = 'none';
+		nextWaveTimer.style.display = 'none';
 	}
 	if (this.enemyQueue.length > 0 && this.enemyQueue[0].spawnTime <= ct) {
 		this.spawn(this.enemyQueue[0]);
@@ -86,8 +88,8 @@ td.Enemies.prototype.update = function(dt, map, ct, player) {
 	// If this wave is over then lets queue up the next wave
 		this.endTime = ct + 5000;
 		player.giveMoney(Math.floor(map.goalHp*td.Enemies.spawning/2));
-		document.getElementById('untilNextWave').style.display = 'block';
-		document.getElementById('nextWaveTimer').textContent = "5";
+		untilNextWave.style.display = 'block';
+		nextWaveTimer.textContent = "5";
 		this.spawnWave(this.waves[0], map);
 		this.waves.splice(0, 1);
 	}
