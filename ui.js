@@ -15,9 +15,9 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	// Map
 	var wt=150;
 	var ht=25;
-	var	whatUnder;	// 0 - Ничего
-					// 1 - Турель
-					// 2 - Земля
+	var	whatUnder = -1;	// 0 - Дорога
+						// 1 - Турель
+						// 2 - Земля
 	var n = 0; // Сколько вещей рисуется
 	stack = this.activeStack;
 	function addToDraw (what) {
@@ -41,78 +41,80 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 		var xCell = Math.floor(x / this.map.gridPixelSize);
 		var yCell = Math.floor(y / this.map.gridPixelSize);
 		var clickedTurret = this.turrets.check(xCell,yCell);
-
-		addToDraw(clickedTurret);
-		addToDraw(this.mapCover);
-		if(x<300) var xPos = Math.floor(x / this.map.gridPixelSize) * this.map.gridPixelSize + 25;
-		else var xPos = Math.floor(x / this.map.gridPixelSize) * this.map.gridPixelSize - wt - 25;
 		
-		if(y<300) var yPos = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize + 40;
-		else var yPos = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize - ht - 60;
-		
-		// Добавление нажатой клетки к списку рисования
-
-		this.cellClicked = {};
-		this.cellClicked.x0 = Math.floor(x / this.map.gridPixelSize) * this.map.gridPixelSize;
-		this.cellClicked.x1 = this.cellClicked.x0 + this.map.gridPixelSize;
-		this.cellClicked.y0 = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize;
-		this.cellClicked.y1 = this.cellClicked.y0 + this.map.gridPixelSize;
-		this.cellClicked.w = this.map.gridPixelSize;
-		this.cellClicked.h = this.map.gridPixelSize;
-		this.cellClicked.color = "rgba(0, 0, 0, 0.2)";
-		this.cellClicked.visible = true;
-		addToDraw(this.cellClicked);
-
-		if(clickedTurret){
-
-			whatUnder = 1;
-			// Добавление радиуса стрельбы турели к списку рисования
-			this.fireRange = {};
-			this.fireRange.isRound = true;
-			this.fireRange.x0 = Math.floor(x / this.map.gridPixelSize) * this.map.gridPixelSize +this.map.gridPixelSize/2;
-			this.fireRange.y0 = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize +this.map.gridPixelSize/2;
-			this.fireRange.r = clickedTurret.range * this.game.map.gridPixelSize+2;
-			this.fireRange.visible = true;
-			this.fireRange.color = clickedTurret.range < 6 ?  "rgba(20, 25, 25, 0.2)" : "gradient";
-			addToDraw(this.fireRange);
-			this.turretButtons[0].text = (clickedTurret.lvl + 1 )  + " уровень.";
-			this.turretButtons[1].cost = Math.floor(clickedTurret.cost/2);
-			this.turretButtons[1].hovered = false;
-			if(clickedTurret.lvl < 5 && this.player.money > Math.floor(clickedTurret.cost/2)){
-				this.turretButtons[1].color = "#CCDDEE";
-				this.turretButtons[1].captureClick = true;
-				this.turretButtons[1].text = "Улучшить: " + Math.floor(clickedTurret.cost/2);
-			} else if (clickedTurret.lvl < 5) {
-				this.turretButtons[1].text = "Улучшить: " + Math.floor(clickedTurret.cost/2);
-				this.turretButtons[1].color = "rgba(0 ,0 ,0 ,0.2)";
-			} else {
-				this.turretButtons[1].text = "Улучшить."
-				this.turretButtons[1].color = "rgba(0 ,0 ,0 ,0.2)";
-				this.turretButtons[1].captureClick = false;
-			}
-			this.turretButtons[2].text = "Продать: " + Math.floor(clickedTurret.cost/3);
+		if(this.map.layout[yCell][xCell] != 1){			
+			addToDraw(clickedTurret);
+			addToDraw(this.mapCover);
+			if(x<300) var xPos = Math.floor(x / this.map.gridPixelSize) * this.map.gridPixelSize + 25;
+			else var xPos = Math.floor(x / this.map.gridPixelSize) * this.map.gridPixelSize - wt - 25;
 			
-			for (var i = 0; i < 3; i++) {
-				this.turretButtons[i].x0 = xPos + 25;
-				this.turretButtons[i].y0 = yPos + i * 30 ;
-				this.turretButtons[i].x1 = this.turretButtons[i].x0 + this.turretButtons[i].w;
-				this.turretButtons[i].y1 = this.turretButtons[i].y0 + this.turretButtons[i].h;
-				this.turretButtons[i].xBuildCell = Math.floor(x / this.map.gridPixelSize);
-				this.turretButtons[i].yBuildCell = Math.floor(y / this.map.gridPixelSize);
-				addToDraw(this.turretButtons[i]);
-			}
-		} else {
-			whatUnder = 2;
-			// Добавление меню с выбором турелей к списку рисования
-			for (var i = 0; i < this.towerButtons.length; i++) {
-				this.towerButtons[i].hovered = false;
-				this.towerButtons[i].x0 = xPos + 25;
-				this.towerButtons[i].y0 = yPos + i * 30 ;
-				this.towerButtons[i].x1 = this.towerButtons[i].x0 + this.towerButtons[i].w;
-				this.towerButtons[i].y1 = this.towerButtons[i].y0 + this.towerButtons[i].h;
-				this.towerButtons[i].xBuildCell = Math.floor(x / this.map.gridPixelSize);
-				this.towerButtons[i].yBuildCell = Math.floor(y / this.map.gridPixelSize);
-				addToDraw(this.towerButtons[i]);
+			if(y<300) var yPos = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize + 40;
+			else var yPos = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize - ht - 60;
+			
+			// Добавление нажатой клетки к списку рисования
+
+			this.cellClicked = {};
+			this.cellClicked.x0 = Math.floor(x / this.map.gridPixelSize) * this.map.gridPixelSize;
+			this.cellClicked.x1 = this.cellClicked.x0 + this.map.gridPixelSize;
+			this.cellClicked.y0 = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize;
+			this.cellClicked.y1 = this.cellClicked.y0 + this.map.gridPixelSize;
+			this.cellClicked.w = this.map.gridPixelSize;
+			this.cellClicked.h = this.map.gridPixelSize;
+			this.cellClicked.color = "rgba(0, 0, 0, 0.2)";
+			this.cellClicked.visible = true;
+			addToDraw(this.cellClicked);
+
+			if(clickedTurret){
+
+				whatUnder = 1;
+				// Добавление радиуса стрельбы турели к списку рисования
+				this.fireRange = {};
+				this.fireRange.isRound = true;
+				this.fireRange.x0 = Math.floor(x / this.map.gridPixelSize) * this.map.gridPixelSize +this.map.gridPixelSize/2;
+				this.fireRange.y0 = Math.floor(y / this.map.gridPixelSize) * this.map.gridPixelSize +this.map.gridPixelSize/2;
+				this.fireRange.r = clickedTurret.range * this.game.map.gridPixelSize+2;
+				this.fireRange.visible = true;
+				this.fireRange.color = clickedTurret.range < 6 ?  "rgba(20, 25, 25, 0.2)" : "gradient";
+				addToDraw(this.fireRange);
+				this.turretButtons[0].text = (clickedTurret.lvl + 1 )  + " уровень.";
+				this.turretButtons[1].cost = Math.floor(clickedTurret.cost/2);
+				this.turretButtons[1].hovered = false;
+				if(clickedTurret.lvl < 5 && this.player.money > Math.floor(clickedTurret.cost/2)){
+					this.turretButtons[1].color = "#CCDDEE";
+					this.turretButtons[1].captureClick = true;
+					this.turretButtons[1].text = "Улучшить: " + Math.floor(clickedTurret.cost/2);
+				} else if (clickedTurret.lvl < 5) {
+					this.turretButtons[1].text = "Улучшить: " + Math.floor(clickedTurret.cost/2);
+					this.turretButtons[1].color = "rgba(0 ,0 ,0 ,0.2)";
+				} else {
+					this.turretButtons[1].text = "Улучшить."
+					this.turretButtons[1].color = "rgba(0 ,0 ,0 ,0.2)";
+					this.turretButtons[1].captureClick = false;
+				}
+				this.turretButtons[2].text = "Продать: " + Math.floor(clickedTurret.cost/3);
+				
+				for (var i = 0; i < 3; i++) {
+					this.turretButtons[i].x0 = xPos + 25;
+					this.turretButtons[i].y0 = yPos + i * 30 ;
+					this.turretButtons[i].x1 = this.turretButtons[i].x0 + this.turretButtons[i].w;
+					this.turretButtons[i].y1 = this.turretButtons[i].y0 + this.turretButtons[i].h;
+					this.turretButtons[i].xBuildCell = Math.floor(x / this.map.gridPixelSize);
+					this.turretButtons[i].yBuildCell = Math.floor(y / this.map.gridPixelSize);
+					addToDraw(this.turretButtons[i]);
+				}
+			} else {
+				whatUnder = 2;
+				// Добавление меню с выбором турелей к списку рисования
+				for (var i = 0; i < this.towerButtons.length; i++) {
+					this.towerButtons[i].hovered = false;
+					this.towerButtons[i].x0 = xPos + 25;
+					this.towerButtons[i].y0 = yPos + i * 30 ;
+					this.towerButtons[i].x1 = this.towerButtons[i].x0 + this.towerButtons[i].w;
+					this.towerButtons[i].y1 = this.towerButtons[i].y0 + this.towerButtons[i].h;
+					this.towerButtons[i].xBuildCell = Math.floor(x / this.map.gridPixelSize);
+					this.towerButtons[i].yBuildCell = Math.floor(y / this.map.gridPixelSize);
+					addToDraw(this.towerButtons[i]);
+				}
 			}
 		}
 	}.bind(this);
@@ -209,7 +211,7 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	}
 	this.turretButtons = [];
 	//Текст туррельки
-	addButton(this.turretButtons,0,0,0,0,wt,ht,"rgba(1 ,1 ,1 ,0.2)",true,false,false,0,0,"black",'14pt Arial',NaN,NaN,NaN);	
+	addButton(this.turretButtons,0,0,0,0,wt,ht,"rgba(1 ,1 ,1 ,0.2)",true,false,false,0,0,"black",'14pt Arial',undefined,undefined,undefined);	
 		
 	//Кнопка апгрейда
 	addButton(this.turretButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,true,0,0,"black",'14pt Arial',
@@ -236,12 +238,12 @@ td.UI.prototype.setup = function(turrets, towerTypes, player, map, game) {
 	);	
 
 	//Кнопка продажи
-	addButton(this.turretButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,false,0,0,"black",'14pt Arial',
+	addButton(this.turretButtons,0,0,0,0,wt,ht,"#CCDDEE",true,true,true,0,0,"black",'14pt Arial',
 		function(i) {
 			this.turrets.sell(this.activeStack[1].xGrid,this.activeStack[1].yGrid);
 			removeDraw(n-1);
 		}.bind(this, i),
-		NaN,NaN);
+		undefined,undefined);
 
 
 
@@ -280,13 +282,12 @@ td.UI.prototype.render = function(ctx) {
 			var inBtn = this.activeStack[i].mouseOver && this.game.mouseX > this.activeStack[i].x0 && this.game.mouseX < this.activeStack[i].x0 + this.activeStack[i].w &&
 			   this.game.mouseY > this.activeStack[i].y0 && this.game.mouseY < this.activeStack[i].y0 + this.activeStack[i].h;
 			if(this.activeStack[i].hovered && !inBtn){
-				console.log('deleted', this.activeStack[i]);
 				this.activeStack[i].hovered = false;
-				this.activeStack[i].mouseOutOverFun();
+				if(typeof this.activeStack[i].mouseOutOverFun != 'undefined') this.activeStack[i].mouseOutOverFun();
 
-			} else if( inBtn && this.activeStack[i].hasOwnProperty("text") && !this.activeStack[i].hovered ){
+			} else if( inBtn && this.activeStack[i].captureClick && !this.activeStack[i].hovered ){
 				this.activeStack[i].hovered = true;
-				this.activeStack[i].mouseOverFun(Math.floor((this.activeStack[3].x0+this.activeStack[3].x1)/2),Math.floor((this.activeStack[3].y0+this.activeStack[3].y1)/2));
+				if(typeof this.activeStack[i].mouseOverFun != 'undefined') this.activeStack[i].mouseOverFun(Math.floor((this.activeStack[3].x0+this.activeStack[3].x1)/2),Math.floor((this.activeStack[3].y0+this.activeStack[3].y1)/2));
 			}
 
 			if(this.activeStack[i].isRound){
@@ -303,7 +304,8 @@ td.UI.prototype.render = function(ctx) {
 				this.ctx.closePath();
 				this.ctx.fill();
 			} else {
-				if(this.activeStack[i].hovered){
+				if(this.activeStack[i].hovered && this.activeStack[i].captureClick){
+					//Обводка кнопки под мышкой
 					this.ctx.strokeStyle = "rgba(0,200,10,0.8)"
 					this.ctx.lineWidth = 3;
 					this.ctx.strokeRect(this.activeStack[i].x0, this.activeStack[i].y0, this.activeStack[i].w, this.activeStack[i].h);
@@ -322,7 +324,11 @@ td.UI.prototype.render = function(ctx) {
 			if(this.activeStack[i].hasOwnProperty("cost")){
 				if(this.player.money >= this.activeStack[i].cost){
 					this.activeStack[i].color = "#CCDDEE";
-				} else this.activeStack[i].color = "rgba(0, 0, 0, 0.2)";
+					this.activeStack[i].captureClick = true;
+				} else {
+					this.activeStack[i].color = "rgba(0, 0, 0, 0.2)";
+					this.activeStack[i].captureClick = false;
+				} 
 			}
 		}
 	}
