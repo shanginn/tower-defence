@@ -4,28 +4,31 @@
 	<meta charset="utf-8">
 	<title>CTD</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
-	<script src="init.js"></script>
-	<script src="renderer.js"></script>
-	<script src="map.js"></script>
-	<script src="turret-types.js"></script>
-	<script src="enemy-types.js"></script>
-	<script src="turrets.js"></script>
-	<script src="turret.js"></script>
-	<script src="player.js"></script>
-	<script src="input.js"></script>
-	<script src="enemies.js"></script>
-	<script src="emitter.js"></script>
-	<script src="particle.js"></script>
-	<script src="tracer.js"></script>
-	<script src="bullet.js"></script>
-	<script src="bullets.js"></script>
-	<script src="enemy.js"></script>
-	<script src="game.js"></script>
-	<script src="mainmenu.js"></script>
-	<script src="pausestate.js"></script>
-	<script src="ui.js"></script>
-	<script src="fsm.js"></script>
-	<script src="client.js"></script>
+	<script src="js/init.js"></script>
+	<script src="js/renderer.js"></script>
+	<script src="js/map.js"></script>
+	<script src="js/turret-types.js"></script>
+	<script src="js/enemy-types.js"></script>
+	<script src="js/tower-abilitys.js"></script>
+	<script src="js/turrets.js"></script>
+	<script src="js/turret.js"></script>
+	<script src="js/player.js"></script>
+	<script src="js/input.js"></script>
+	<script src="js/enemies.js"></script>
+	<script src="js/emitter.js"></script>
+	<script src="js/particle.js"></script>
+	<script src="js/tracer.js"></script>
+	<script src="js/bullet.js"></script>
+	<script src="js/bullets.js"></script>
+	<script src="js/enemy.js"></script>
+	<script src="js/game.js"></script>
+	<script src="js/mainmenu.js"></script>
+	<script src="js/pausestate.js"></script>
+	<script src="js/ui.js"></script>
+	<script src="js/fsm.js"></script>
+	<script src="js/client.js"></script>
+	<script src="js/soundmanager.js"></script>
+	<script src="js/wang.js"></script>
 </head>
 
 <script>
@@ -35,9 +38,37 @@ function pse(){
 		}
 }	
 </script>
-
+<script>
+soundManager.setup({
+	url: 'js/', // path to load SWF from (overriding default)
+	bgColor: '#333333',
+	wmode: 'transparent',
+	debugMode: false,
+	preferFlash: false,
+	html5PollingInterval: 50,
+	
+	onready: function() {
+		var TT = td.TurretTypes;
+		for(tower in TT){
+			for(var j=0; j<TT[tower]["sounds"].length; j++){
+				soundManager.createSound({
+					id: TT[tower]["sounds"][j].split(".")[0].split("/")[1],
+					url: 'audio/'+TT[tower]["sounds"][j],
+				});	
+			}
+		}
+		soundManager.setup({
+			defaultOptions: {
+				autoLoad: true,
+				multiShot: true,
+			}
+		});
+	}
+});
+</script>
 <body>
 	<div role="main" id="game">
+		<img id="dr" width="0">
 		<div style="position:relative">
 			<canvas id="gameCanvas" width='400'></canvas>
 			<input style="display:none" class="button" type="button" id="resume" value="Продолжить" onClick="window.fsm.gotoPrevState(); document.getElementById('resume').style.display = 'none'; document.getElementById('restart').style.display = 'none';">
