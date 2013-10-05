@@ -27,7 +27,7 @@ td.Renderer = function(canvas, game) {
 	this.raf = null;
 	this.tails = td.Wang(10);
 	this.edge = 62;
-	this.dr = document.getElementById('dr');
+	this.bg = document.getElementById('bg');
 
 	var n = 0;
 	var titles = [];
@@ -41,13 +41,14 @@ td.Renderer = function(canvas, game) {
 	}
 	for(var y in this.tails) {
 		for(var x in this.tails[y]) {
-			this.ctx.drawImage(dr,
+			this.ctx.drawImage(bg,
 				titles[this.tails[y][x]].x,
 				titles[this.tails[y][x]].y,
 				this.edge, this.edge, x*this.edge/5, y*this.edge/5, this.edge/5,this.edge/5);
 		}
 	}
-	//document.write('<img id="bg-tile" src="'+this.canvas.toDataURL("image/png")+'" width="0"/>');
+	this.bg.src=this.canvas.toDataURL("image/png");
+
 };
 
 td.Renderer.prototype.startRendering = function() {
@@ -76,7 +77,7 @@ td.Renderer.prototype.setCell = function (cellX,cellY,arg) {
 }
 
 td.Renderer.prototype.renderMap = function() {
-	//this.ctx.drawImage(document.getElementById('bg-tile'),0,0);
+	this.ctx.drawImage(this.bg,0,0);
 	var mapLayout = this.game.map.layout;
 	for (var y = 0; y < mapLayout.length; y++) {
 		for (var x = 0; x < mapLayout[y].length; x++) {
